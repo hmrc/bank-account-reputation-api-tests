@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.utils
+package uk.gov.hmrc.test.api.model.response
 
-import org.slf4j.{Logger, LoggerFactory}
+import play.api.libs.json.{Json, OFormat}
 
-object ApiLogger {
+case class AssessV4(
+  nonStandardAccountDetailsRequiredForBacs: String,
+  accountNumberIsWellFormatted: String,
+  accountExists: String,
+  nameMatches: String,
+  sortCodeIsPresentOnEISCD: String,
+  sortCodeBankName: Option[String] = None,
+  sortCodeSupportsDirectDebit: String,
+  sortCodeSupportsDirectCredit: String,
+  iban: Option[String] = None,
+  accountName: Option[String] = None
+)
 
-  val log: Logger = LoggerFactory.getLogger("[API Logger]")
-
+object AssessV4 {
+  implicit val responseJsonFormat: OFormat[AssessV4] = Json.format[AssessV4]
 }

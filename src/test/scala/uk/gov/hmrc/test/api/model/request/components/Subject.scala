@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.helpers
+package uk.gov.hmrc.test.api.model.request.components
 
-import org.scalatest.Assertions.fail
-import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.test.api.service.AuthService
+import play.api.libs.json.{Json, OFormat}
 
-class AuthHelper {
-
-  val authAPI: AuthService = new AuthService
-
-  def getAuthBearerToken: String = {
-    val authServiceRequestResponse: StandaloneWSRequest#Self#Response = authAPI.postLogin
-    authServiceRequestResponse.header("Authorization").getOrElse(fail("Could not obtain auth bearer token"))
-  }
+object Subject {
+  implicit val subjectJsonFormat: OFormat[Subject] = Json.format[Subject]
 }
+
+case class Subject(
+  firstName: Option[String] = None,
+  lastName: Option[String] = None,
+  name: Option[String] = None,
+  address: Option[Address] = None
+)
