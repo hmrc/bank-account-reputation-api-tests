@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.utils
+package uk.gov.hmrc.test.api.tags
 
-import org.slf4j.{Logger, LoggerFactory}
+import org.scalatest.Tag
 
-object ApiLogger {
-
-  val log: Logger = LoggerFactory.getLogger("[API Logger]")
-
-}
+object ZapTests extends Tag("uk.gov.hmrc.tags.ZapTests")

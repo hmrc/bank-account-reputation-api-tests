@@ -1,7 +1,5 @@
-**This is a template README.md.  Be sure to update this with project specific content that describes your api test project.**
-
 # bank-account-reputation-api-tests
-API test suite for the `<digital service name>` using ScalaTest and [play-ws](https://github.com/playframework/play-ws) client.  
+API test suite for the `bank-account-reputation` service using ScalaTest and [play-ws](https://github.com/playframework/play-ws) client.  
 
 ## Running the tests
 
@@ -12,9 +10,41 @@ Prior to executing the tests ensure you have:
 Run the following commands to start services locally:
 
     docker run --rm -d -p 27017:27017 --name mongo percona/percona-server-mongodb:5.0
-    sm --start IVHO -r --wait 100
 
-Using the `--wait 100` argument ensures a health check is run on all the services started as part of the profile. `100` refers to the given number of seconds to wait for services to pass health checks.    
+    sm --start BANK_ACCOUNT_REPUTATION_FRONTEND_SERVICES --appendArgs '{
+      "BANK_ACCOUNT_REPUTATION": [
+        "-J-Dapplication.router=testOnlyDoNotUseInAppConf.Routes",
+        "-J-Dmicroservice.services.callvalidate.endpoint=http://localhost:6001/callvalidateapi",
+        "-J-Dmicroservice.services.surepay.hostname=http://localhost:6001/surepay/",
+        "-J-Dmicroservice.services.surepay.enabled=true",
+        "-J-Dauditing.consumer.baseUri.port=6001",
+        "-J-Dauditing.consumer.baseUri.host=localhost",
+        "-J-Dauditing.enabled=true",
+        "-J-Dproxy.proxyRequiredForThisEnvironment=false",
+        "-J-Dmicroservice.services.eiscd.aws.endpoint=http://localhost:6002",
+        "-J-Dmicroservice.services.eiscd.aws.bucket=txm-dev-bacs-eiscd",
+        "-J-Dmicroservice.services.eiscd.aws.accesskeyid=AKIAIOSFODNN7EXAMPLE",
+        "-J-Dmicroservice.services.eiscd.aws.secretkey=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "-J-Dmicroservice.services.modcheck.aws.endpoint=http://localhost:6002",
+        "-J-Dmicroservice.services.modcheck.aws.bucket=txm-dev-bacs-modcheck",
+        "-J-Dmicroservice.services.modcheck.aws.accesskeyid=AKIAIOSFODNN7EXAMPLE",
+        "-J-Dmicroservice.services.modcheck.aws.secretkey=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+        "-J-Dmicroservice.services.thirdPartyCache.endpoint=http://localhost:9899/cache",
+        "-J-Dmicroservice.services.surepay.cache.enabled=true",
+        "-J-Dmicroservice.services.access-control.enabled=true",
+        "-J-Dmicroservice.services.access-control.allow-list.0=bars-acceptance-tests",
+        "-J-Dmicroservice.services.access-control.allow-list.1=some-upstream-service",
+        "-J-Dmicroservice.services.access-control.allow-list.2=bank-account-reputation-frontend"
+      ],
+      "BANK_ACCOUNT_REPUTATION_THIRD_PARTY_CACHE": [
+        "-J-Dcontrollers.confidenceLevel.uk.gov.hmrc.bankaccountreputationthirdpartycache.controllers.CacheController.needsLogging=true"
+      ],
+      "BANK_ACCOUNT_REPUTATION_FRONTEND": [
+        "-J-Dauditing.enabled=true",
+        "-J-Dauditing.consumer.baseUri.port=6001",
+        "-J-Dauditing.consumer.baseUri.host=localhost"
+      ]
+    }'    
 
 Then execute the `run_tests.sh` script:
 

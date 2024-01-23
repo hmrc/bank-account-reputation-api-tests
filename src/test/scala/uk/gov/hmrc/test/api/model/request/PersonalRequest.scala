@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.utils
+package uk.gov.hmrc.test.api.model.request
 
-import org.slf4j.{Logger, LoggerFactory}
+import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
 
-object ApiLogger {
+object PersonalRequest {
+  implicit val requestJsonFormat: OFormat[PersonalRequest] = Json.format[PersonalRequest]
+}
 
-  val log: Logger = LoggerFactory.getLogger("[API Logger]")
+case class PersonalRequest(account: Account, subject: Subject) {
 
+  def asJsonString(): String =
+    Json.toJson(this).toString()
 }

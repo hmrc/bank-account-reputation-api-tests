@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.utils
+package uk.gov.hmrc.test.api.model.response
 
-import org.slf4j.{Logger, LoggerFactory}
+import play.api.libs.json.{Json, OFormat}
 
-object ApiLogger {
-
-  val log: Logger = LoggerFactory.getLogger("[API Logger]")
-
+object BadRequest {
+  implicit val badRequestJsonFormat: OFormat[BadRequest] = Json.format[BadRequest]
 }
+
+case class BadRequest(code: String, desc: String)
