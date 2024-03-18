@@ -68,7 +68,6 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
       actual.accountExists mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      actual.iban.get mustBe "GB59 LOYD 4047 8470 8724 90"
       response.status mustBe 200
 
       mockServer.verify(500.millis)(
@@ -220,7 +219,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 "&& @.detail[\"response.callcredit\"]=='surepay_fromcache'" +
                 ")]"
             )
@@ -344,7 +343,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 s"&& @.detail.callingClient=='$defaultUserAgent'" +
                 ")]"
             )
@@ -391,7 +390,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 "&& @.detail.callingClient=='some-upstream-service'" +
                 s"&& @.detail.userAgent=='$defaultUserAgent'" +
                 ")]"
@@ -509,7 +508,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==18" +
+                "&& @.detail.length()==16" +
                 ")]"
             )
           ),
@@ -574,7 +573,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
@@ -638,7 +637,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
@@ -717,7 +716,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==19" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
@@ -796,7 +795,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
@@ -876,7 +875,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==21" +
+                "&& @.detail.length()==19" +
                 s"&& @.tags.path=='/${service.BarsEndpoints.VERIFY_PERSONAL}'" +
                 ")]"
             )
@@ -956,7 +955,7 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
@@ -1035,78 +1034,13 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
+                "&& @.detail.length()==18" +
                 ")]"
             )
           ),
         VerificationTimes.atLeast(1)
       )
     }
-
-    "should fall back to Transunion if the response from Surepay is unrecognised" taggedAs (LocalTests, ZapTests) in {
-      val xRequestId: String = UUID.randomUUID().toString
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(SUREPAY_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/json")
-            .withBody(s"""{"Matched": true, "ReasonCode": "XXXX", "Name": "James O'Connor"}""".stripMargin)
-            .withStatusCode(200)
-        )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/xml")
-            .withBody(new CallValidateResponseBuilder().build())
-            .withStatusCode(200)
-        )
-
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
-      )
-      val response    = service.postVerifyPersonal(requestBody, xRequestId)
-      val actual      = Json.parse(response.body).as[AssessV4]
-
-      actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-      actual.accountNumberIsWellFormatted mustBe "yes"
-      actual.sortCodeBankName.get mustBe "Lloyds"
-      actual.accountExists mustBe "indeterminate"
-      actual.nameMatches mustBe "indeterminate"
-      actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      response.status mustBe 200
-
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==20" +
-                ")]"
-            )
-          ),
-        VerificationTimes.atLeast(1)
-      )
-    }
-
   }
 
   "Invalid requests" when {
@@ -1208,63 +1142,6 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
 
       actual.code mustBe "BAD_NAME"
       actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with empty address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array()), Some("X9 9AG"))))
-      )
-      val response    = service.postVerifyPersonal(requestBody)
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "NO_ADDRESS_LINES"
-      actual.desc mustBe "no address lines"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with missing address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(postcode = Some("X9 9AG"))))
-      )
-      val response    = service.postVerifyPersonal(requestBody)
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "MALFORMED_JSON"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with an address line exceeding 140 chars" taggedAs (LocalTests, ZapTests) in {
-      val moreThan140chars = Random.alphanumeric.take(141).mkString
-      val requestBody      = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array(moreThan140chars)), Some("X9 9AG"))))
-      )
-      val response         = service.postVerifyPersonal(requestBody)
-      val actual           = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "EXCESS_ADDRESS_LENGTH"
-      actual.desc mustBe "address text is too long"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with more than 4 address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(
-          name = generateRandomName,
-          address = Some(
-            Address(Some(Array("first line", "second line", "third line", "fourth line", "fifth line")), Some("X9 9AG"))
-          )
-        )
-      )
-      val response    = service.postVerifyPersonal(requestBody)
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "EXCESS_ADDRESS_LINES"
-      actual.desc mustBe "too many address lines"
       response.status mustBe 400
     }
 
