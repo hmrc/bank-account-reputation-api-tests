@@ -65,12 +65,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -150,12 +147,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "error"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "error"
-      actual.addressMatches mustBe "error"
       actual.nameMatches mustBe "error"
-      actual.nonConsented mustBe "error"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -215,12 +209,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "yes"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -230,12 +221,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountNumberWithSortCodeIsValid mustBe "yes"
-      cached.subjectHasDeceased mustBe "indeterminate"
       cached.sortCodeBankName.get mustBe "Lloyds"
       cached.accountExists mustBe "yes"
-      cached.addressMatches mustBe "indeterminate"
       cached.nameMatches mustBe "yes"
-      cached.nonConsented mustBe "indeterminate"
       cached.sortCodeIsPresentOnEISCD mustBe "yes"
       secondResponse.status mustBe 200
 
@@ -281,12 +269,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "yes"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -332,12 +317,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "yes"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -387,12 +369,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "yes"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
     }
@@ -425,11 +404,8 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "inapplicable"
       actual.accountExists mustBe "inapplicable"
-      actual.addressMatches mustBe "inapplicable"
       actual.nameMatches mustBe "inapplicable"
-      actual.nonConsented mustBe "inapplicable"
       actual.sortCodeIsPresentOnEISCD mustBe "no"
       actual.sortCodeSupportsDirectDebit mustBe "no"
       actual.sortCodeSupportsDirectCredit mustBe "no"
@@ -495,11 +471,8 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "indeterminate"
-      actual.subjectHasDeceased mustBe "inapplicable"
       actual.accountExists mustBe "inapplicable"
-      actual.addressMatches mustBe "inapplicable"
       actual.nameMatches mustBe "inapplicable"
-      actual.nonConsented mustBe "inapplicable"
       actual.sortCodeIsPresentOnEISCD mustBe "no"
       actual.sortCodeSupportsDirectDebit mustBe "no"
       actual.sortCodeSupportsDirectCredit mustBe "no"
@@ -550,12 +523,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "no"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -603,12 +573,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -686,12 +653,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -769,12 +733,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -852,12 +813,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "yes"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -935,12 +893,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "no"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "yes"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -1018,12 +973,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 
@@ -1086,12 +1038,9 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.subjectHasDeceased mustBe "indeterminate"
       actual.sortCodeBankName.get mustBe "Lloyds"
       actual.accountExists mustBe "indeterminate"
-      actual.addressMatches mustBe "indeterminate"
       actual.nameMatches mustBe "indeterminate"
-      actual.nonConsented mustBe "indeterminate"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
       response.status mustBe 200
 

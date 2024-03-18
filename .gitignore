@@ -20,9 +20,8 @@ eclipse
 .scala_dependencies
 
 # sbt files
-dist
-target
-lib_managed
+dist/
+**/target/
+lib_managed/
 src_managed/
-project/project
-project/target
+project/project/

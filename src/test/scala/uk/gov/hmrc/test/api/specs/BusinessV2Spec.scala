@@ -70,7 +70,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -137,7 +136,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       actual.sortCodeSupportsDirectDebit mustBe "no"
       actual.sortCodeSupportsDirectCredit mustBe "no"
@@ -225,7 +223,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -238,7 +235,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -292,7 +288,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "indeterminate"
       actual.companyNameMatches mustBe "indeterminate"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
     }
@@ -310,7 +305,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -346,7 +340,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
     }
@@ -365,7 +358,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -400,7 +392,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -436,7 +427,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -449,7 +439,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -503,7 +492,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -516,7 +504,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -570,7 +557,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -626,7 +612,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -682,7 +667,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "indeterminate"
       actual.companyNameMatches mustBe "indeterminate"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
