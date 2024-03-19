@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.test.api.specs
 
+import org.mockserver.model.{HttpRequest, HttpResponse}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
@@ -28,6 +29,20 @@ import uk.gov.hmrc.test.api.utils.MockServer
 import java.util.UUID
 
 class CacheMigrationSpec extends BaseSpec with MockServer {
+  mockServer
+    .when(
+      HttpRequest
+        .request()
+        .withMethod("POST")
+        .withPath("/surepay/v1/gateway")
+    )
+    .respond(
+      HttpResponse
+        .response()
+        .withHeader("Content-Type", "application/json")
+        .withBody(s"""{"Matched" : true}""".stripMargin)
+        .withStatusCode(200)
+    )
 
   "Confirmation of Payee third party cache" must {
 

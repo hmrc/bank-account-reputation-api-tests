@@ -126,19 +126,6 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .response()
             .withStatusCode(429)
         )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withStatusCode(429)
-        )
 
       val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
@@ -493,25 +480,6 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .response()
             .withHeader("Content-Type", "application/json")
             .withBody(s"""{"Matched": false,"ReasonCode": "AC01"}""".stripMargin)
-            .withStatusCode(200)
-        )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/xml")
-            .withBody(
-              new CallValidateResponseBuilder()
-                .withError("BV3: Unknown account")
-                .build()
-            )
             .withStatusCode(200)
         )
 

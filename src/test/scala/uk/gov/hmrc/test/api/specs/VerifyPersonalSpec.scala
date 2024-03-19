@@ -33,9 +33,9 @@ import scala.util.Random
 
 class VerifyPersonalSpec extends BaseSpec with MockServer {
 
-  val DEFAULT_ACCOUNT: Account         = Account(Some("404784"), Some("70872490"))
-  val HMRC_ACCOUNT: Account            = Account(Some("083210"), Some("12001039"))
-  val SUREPAY_TEST_ACCOUNT: Account    = Account(Some("999999"), Some("00000001"))
+  val DEFAULT_ACCOUNT: Account      = Account(Some("404784"), Some("70872490"))
+  val HMRC_ACCOUNT: Account         = Account(Some("083210"), Some("12001039"))
+  val SUREPAY_TEST_ACCOUNT: Account = Account(Some("999999"), Some("00000001"))
 
   "Payload verification" when {
 
@@ -242,21 +242,6 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             .response()
             .withHeader("Content-Type", "application/json")
             .withBody(s"""{"Matched": false, "ReasonCode": "ACNS"}""".stripMargin)
-            .withStatusCode(200)
-        )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/xml")
-            .withBody(new CallValidateResponseBuilder().build())
             .withStatusCode(200)
         )
 
@@ -530,25 +515,6 @@ class VerifyPersonalSpec extends BaseSpec with MockServer {
             .response()
             .withHeader("Content-Type", "application/json")
             .withBody(s"""{"Matched": false,"ReasonCode": "AC01"}""".stripMargin)
-            .withStatusCode(200)
-        )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/xml")
-            .withBody(
-              new CallValidateResponseBuilder()
-                .withError("BV3: Unknown account")
-                .build()
-            )
             .withStatusCode(200)
         )
 
