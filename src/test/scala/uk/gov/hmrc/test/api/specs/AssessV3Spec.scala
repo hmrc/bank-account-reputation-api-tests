@@ -19,7 +19,7 @@ package uk.gov.hmrc.test.api.specs
 import org.mockserver.model.NottableString.string
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
-import uk.gov.hmrc.test.api.model.request.components.{Account, Address, Subject}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
 import uk.gov.hmrc.test.api.utils.MockServer
 import org.mockserver.model.{Header, HttpRequest, HttpResponse, JsonPathBody, NottableString}
 import org.mockserver.verify.VerificationTimes
@@ -33,10 +33,9 @@ import scala.util.Random
 
 class AssessV3Spec extends BaseSpec with MockServer {
 
-  val DEFAULT_ADDRESS: Option[Address] = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9AG")))
-  val DEFAULT_ACCOUNT: Account         = Account(Some("404784"), Some("70872490"))
-  val HMRC_ACCOUNT: Account            = Account(Some("083210"), Some("12001039"))
-  val SUREPAY_TEST_ACCOUNT: Account    = Account(Some("999999"), Some("00000001"))
+  val DEFAULT_ACCOUNT: Account      = Account(Some("404784"), Some("70872490"))
+  val HMRC_ACCOUNT: Account         = Account(Some("083210"), Some("12001039"))
+  val SUREPAY_TEST_ACCOUNT: Account = Account(Some("999999"), Some("00000001"))
 
   "Payload verification" when {
 
@@ -58,7 +57,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -141,7 +140,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(429)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[AssessV3]
 
@@ -161,7 +160,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 ")]"
             )
           ),
@@ -202,7 +201,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -235,7 +234,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 "&& @.detail[\"response.callcredit\"]=='surepay_fromcache'" +
                 ")]"
             )
@@ -262,7 +261,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -283,7 +282,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 s"&& @.detail.callingClient=='$defaultUserAgent'" +
                 ")]"
             )
@@ -310,7 +309,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3WithTrueCallingClient(requestBody, xRequestId, "some-upstream-service")
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -331,7 +330,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 "&& @.detail.callingClient=='some-upstream-service'" +
                 s"&& @.detail.userAgent=='$defaultUserAgent'" +
                 ")]"
@@ -362,7 +361,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -396,7 +395,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       val requestBody = PersonalRequest(
         Account(Some("401003"), Some("71201948")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
@@ -451,7 +450,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==21" +
+                "&& @.detail.length()==19" +
                 ")]"
             )
           ),
@@ -463,7 +462,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
       val xRequestId: String = UUID.randomUUID().toString
       val requestBody        = PersonalRequest(
         SUREPAY_TEST_ACCOUNT,
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response           = service.postPersonalAssessV3(requestBody, xRequestId)
 
@@ -516,7 +515,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
       val actual = Json.parse(response.body).as[AssessV3]
@@ -537,251 +536,11 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 ")]"
             )
           ),
         VerificationTimes.atLeast(1)
-      )
-    }
-
-    "should receive a indeterminate response when calling the assess endpoint with empty post code" taggedAs (LocalTests, ZapTests) in {
-      val xRequestId: String = UUID.randomUUID().toString
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(SUREPAY_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/json")
-            .withBody(s"""{"Matched": false, "ReasonCode": "ACNS"}""".stripMargin)
-            .withStatusCode(200)
-        )
-
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some(""))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, xRequestId)
-
-      val actual = Json.parse(response.body).as[AssessV3]
-
-      actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-      actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.sortCodeBankName.get mustBe "Lloyds"
-      actual.accountExists mustBe "indeterminate"
-      actual.nameMatches mustBe "indeterminate"
-      actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      response.status mustBe 200
-
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
-                ")]"
-            )
-          ),
-        VerificationTimes.atLeast(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/surepay/v1/gateway'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/callvalidateapi'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(0)
-      )
-    }
-
-    "should receive a indeterminate response when calling the assess endpoint with missing post code" taggedAs (LocalTests, ZapTests) in {
-      val xRequestId: String = UUID.randomUUID().toString
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(SUREPAY_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/json")
-            .withBody(s"""{"Matched": false, "ReasonCode": "ACNS"}""".stripMargin)
-            .withStatusCode(200)
-        )
-
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(lines = Some(Array("7 Skyline Avenue")))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, xRequestId)
-
-      val actual = Json.parse(response.body).as[AssessV3]
-
-      actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-      actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.sortCodeBankName.get mustBe "Lloyds"
-      actual.accountExists mustBe "indeterminate"
-      actual.nameMatches mustBe "indeterminate"
-      actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      response.status mustBe 200
-
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==21" +
-                ")]"
-            )
-          ),
-        VerificationTimes.atLeast(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/surepay/v1/gateway'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/callvalidateapi'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(0)
-      )
-    }
-
-    "should receive a indeterminate response when calling the assess endpoint with invalid post code" taggedAs (LocalTests, ZapTests) in {
-      val xRequestId: String = UUID.randomUUID().toString
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(SUREPAY_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/json")
-            .withBody(s"""{"Matched": false, "ReasonCode": "ACNS"}""".stripMargin)
-            .withStatusCode(200)
-        )
-
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, xRequestId)
-
-      val actual = Json.parse(response.body).as[AssessV3]
-
-      actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-      actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.sortCodeBankName.get mustBe "Lloyds"
-      actual.accountExists mustBe "indeterminate"
-      actual.nameMatches mustBe "indeterminate"
-      actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      response.status mustBe 200
-
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
-                ")]"
-            )
-          ),
-        VerificationTimes.atLeast(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/surepay/v1/gateway'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(1)
-      )
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit/merged")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/callvalidateapi'" +
-                s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
-                ")]"
-            )
-          ),
-        VerificationTimes.exactly(0)
       )
     }
 
@@ -805,7 +564,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
@@ -827,7 +586,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 ")]"
             )
           ),
@@ -885,7 +644,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
@@ -907,7 +666,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 ")]"
             )
           ),
@@ -965,7 +724,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
 
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, xRequestId)
 
@@ -987,85 +746,19 @@ class AssessV3Spec extends BaseSpec with MockServer {
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
+                "&& @.detail.length()==20" +
                 ")]"
             )
           ),
         VerificationTimes.atLeast(1)
       )
     }
-
-    "should fall back to Transunion if the response from Surepay is unrecognised" taggedAs (LocalTests, ZapTests) in {
-      val xRequestId: String = UUID.randomUUID().toString
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(SUREPAY_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/json")
-            .withBody(s"""{"Matched": true, "ReasonCode": "XXXX", "Name": "James O'Connor"}""".stripMargin)
-            .withStatusCode(200)
-        )
-      mockServer
-        .when(
-          HttpRequest
-            .request()
-            .withMethod("POST")
-            .withPath(TRANSUNION_PATH)
-            .withHeader("X-Request-ID", xRequestId)
-        )
-        .respond(
-          HttpResponse
-            .response()
-            .withHeader("Content-Type", "application/xml")
-            .withBody(new CallValidateResponseBuilder().build())
-            .withStatusCode(200)
-        )
-
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array("7 Skyline Avenue")), Some("X9 9 9AG"))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, xRequestId)
-
-      val actual = Json.parse(response.body).as[AssessV3]
-
-      actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-      actual.accountNumberWithSortCodeIsValid mustBe "yes"
-      actual.sortCodeBankName.get mustBe "Lloyds"
-      actual.accountExists mustBe "indeterminate"
-      actual.nameMatches mustBe "indeterminate"
-      actual.sortCodeIsPresentOnEISCD mustBe "yes"
-      response.status mustBe 200
-
-      mockServer.verify(500.millis)(
-        HttpRequest
-          .request()
-          .withPath("/write/audit")
-          .withBody(
-            JsonPathBody.jsonPath(
-              "$[?(" +
-                "@.auditType=='TxSucceeded' " +
-                "&& @.detail.length()==22" +
-                ")]"
-            )
-          ),
-        VerificationTimes.atLeast(1)
-      )
-    }
-
   }
 
   "Invalid requests" when {
 
     "should receive a bad request when calling the assess endpoint missing name" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject())
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -1077,12 +770,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with all name fields" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(
-          firstName = Some("Nathan"),
-          lastName = Some("Smith"),
-          name = generateRandomName,
-          address = DEFAULT_ADDRESS
-        )
+        Subject(firstName = Some("Nathan"), lastName = Some("Smith"), name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1095,7 +783,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with name and last name" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(lastName = Some("Smith"), name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(lastName = Some("Smith"), name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1108,7 +796,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with name and first name" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(firstName = Some("Nathan"), name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(firstName = Some("Nathan"), name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1121,7 +809,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with empty first name" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(firstName = Some(""), lastName = Some("Smith"), address = DEFAULT_ADDRESS)
+        Subject(firstName = Some(""), lastName = Some("Smith"))
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1132,7 +820,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     }
 
     "should receive a bad request when calling the assess endpoint with missing first name" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(lastName = Some("Smith"), address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(lastName = Some("Smith")))
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -1144,7 +832,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with empty last name" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         DEFAULT_ACCOUNT,
-        Subject(firstName = Some("Nathan"), lastName = Some(""), address = DEFAULT_ADDRESS)
+        Subject(firstName = Some("Nathan"), lastName = Some(""))
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1155,7 +843,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     }
 
     "should receive a bad request when calling the assess endpoint with missing last name" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(firstName = Some("Nathan"), address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(firstName = Some("Nathan")))
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -1164,67 +852,10 @@ class AssessV3Spec extends BaseSpec with MockServer {
       response.status mustBe 400
     }
 
-    "should receive a bad request when calling the assess endpoint with empty address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array()), Some("X9 9AG"))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, "")
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "NO_ADDRESS_LINES"
-      actual.desc mustBe "no address lines"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with missing address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(postcode = Some("X9 9AG"))))
-      )
-      val response    = service.postPersonalAssessV3(requestBody, "")
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "MALFORMED_JSON"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with an address line exceeding 140 chars" taggedAs (LocalTests, ZapTests) in {
-      val moreThan140chars = Random.alphanumeric.take(141).mkString
-      val requestBody      = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(name = generateRandomName, address = Some(Address(Some(Array(moreThan140chars)), Some("X9 9AG"))))
-      )
-      val response         = service.postPersonalAssessV3(requestBody, "")
-      val actual           = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "EXCESS_ADDRESS_LENGTH"
-      actual.desc mustBe "address text is too long"
-      response.status mustBe 400
-    }
-
-    "should receive a bad request when calling the assess endpoint with more than 4 address lines" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(
-        DEFAULT_ACCOUNT,
-        Subject(
-          name = generateRandomName,
-          address = Some(
-            Address(Some(Array("first line", "second line", "third line", "fourth line", "fifth line")), Some("X9 9AG"))
-          )
-        )
-      )
-      val response    = service.postPersonalAssessV3(requestBody, "")
-      val actual      = Json.parse(response.body).as[BadRequest]
-
-      actual.code mustBe "EXCESS_ADDRESS_LINES"
-      actual.desc mustBe "too many address lines"
-      response.status mustBe 400
-    }
-
     "should receive a bad request when calling the assess endpoint with too short sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("79880"), Some("99901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1237,7 +868,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a missing sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(accountNumber = Some("99901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1249,7 +880,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a missing account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(sortCode = Some("679880")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1259,7 +890,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     }
 
     "should receive a bad request when calling the assess endpoint with a missing sort code and account number" taggedAs (LocalTests, ZapTests) in {
-      val requestBody = PersonalRequest(Account(), Subject(name = generateRandomName, address = DEFAULT_ADDRESS))
+      val requestBody = PersonalRequest(Account(), Subject(name = generateRandomName))
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -1270,7 +901,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too long sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("6679880"), Some("99901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1283,7 +914,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with an invalid sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("9999A7"), Some("99901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1296,7 +927,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too long account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("679880"), Some("999901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1309,7 +940,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too short account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("679880"), Some("9901100")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1322,7 +953,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with an invalid account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some("679880"), Some("1A110005")),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1348,7 +979,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with HMRC account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some(HMRC_ACCOUNT.sortCode.get), Some(HMRC_ACCOUNT.accountNumber.get)),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3(requestBody, "")
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -1361,7 +992,7 @@ class AssessV3Spec extends BaseSpec with MockServer {
     "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody = PersonalRequest(
         Account(Some(DEFAULT_ACCOUNT.sortCode.get), Some(DEFAULT_ACCOUNT.accountNumber.get)),
-        Subject(name = generateRandomName, address = DEFAULT_ADDRESS)
+        Subject(name = generateRandomName)
       )
       val response    = service.postPersonalAssessV3WithUnkownUserAgent(requestBody, "")
       val actual      = Json.parse(response.body).as[Forbidden]

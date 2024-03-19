@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.PersonalRequest
-import uk.gov.hmrc.test.api.model.request.components.{Account, Address, Subject}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
 import uk.gov.hmrc.test.api.model.response.AssessV4
 import uk.gov.hmrc.test.api.tags.LocalTests
 import uk.gov.hmrc.test.api.utils.MockServer
@@ -33,17 +33,16 @@ class CacheMigrationSpec extends BaseSpec with MockServer {
 
     "Handle a mix of legacy and new cache entries" taggedAs LocalTests in {
       val xRequestId: String = UUID.randomUUID().toString
-      val address            = Address(Some(Array("7 Skyline Avenue")), Some("X9 9AG"))
 
       service.postCacheMigrationtestSetup(xRequestId)
 
       val request1 = PersonalRequest(
         Account(Some("404784"), Some("70872490")),
-        Subject(name = Some("Bob Smith"), address = Some(address))
+        Subject(name = Some("Bob Smith"))
       )
       val request2 = PersonalRequest(
         Account(Some("404784"), Some("70872490")),
-        Subject(name = Some("Jan Smith"), address = Some(address))
+        Subject(name = Some("Jan Smith"))
       )
 
       val response1 = service.postVerifyPersonal(request1, xRequestId)

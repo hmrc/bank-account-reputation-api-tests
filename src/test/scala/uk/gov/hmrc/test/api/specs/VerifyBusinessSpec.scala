@@ -21,7 +21,7 @@ import org.mockserver.verify.VerificationTimes
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.BusinessRequest
-import uk.gov.hmrc.test.api.model.request.components.{Account, Address, Business}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Business}
 import uk.gov.hmrc.test.api.model.response.{BadRequest, BusinessV3, Forbidden}
 import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
@@ -34,7 +34,6 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
   val DEFAULT_ACCOUNT: Account         = Account(Some("601613"), Some("26344696"))
   val HMRC_ACCOUNT: Account            = Account(Some("083210"), Some("12001039"))
-  val DEFAULT_ADDRESS: Option[Address] = Some(Address(Some(Array("22303 Darwin Turnpike")), Some("CZ0 8IW")))
   val SUREPAY_TEST_ACCOUNT: Account    = Account(Some("999999"), Some("00000001"))
 
   "Payload verification" when {
@@ -58,7 +57,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -125,7 +124,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201948")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
@@ -210,7 +209,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -273,7 +272,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -290,7 +289,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive sort code is not valid if sort code is in modcheck database but account number fails validation" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201958")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -323,7 +322,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("679880"), Some("27505196")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
@@ -343,7 +342,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         SUREPAY_TEST_ACCOUNT,
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
@@ -377,7 +376,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201948")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
@@ -410,7 +409,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -476,7 +475,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -539,7 +538,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -591,7 +590,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    = service.postVerifyBusinessWithTrueCallingClient(requestBody, xRequestId, "some-upstream-service")
       val actual      = Json.parse(response.body).as[BusinessV3]
 
@@ -643,7 +642,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
         )
 
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV3]
@@ -677,7 +676,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
     "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    = service.postVerifyBusinessWithUnknownUserAgent(requestBody)
       val actual      = Json.parse(response.body).as[Forbidden]
 
@@ -707,7 +706,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
             .withStatusCode(200)
         )
 
-      val requestBody = BusinessRequest(DEFAULT_ACCOUNT, Some(Business(address = DEFAULT_ADDRESS)))
+      val requestBody = BusinessRequest(DEFAULT_ACCOUNT, Some(Business()))
       val response    =
         service.postVerifyBusiness(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -718,7 +717,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
     "should receive a bad request when calling the assess endpoint with empty trading name" taggedAs (LocalTests, ZapTests) in {
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(companyName = Some(""), address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(companyName = Some(""))))
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -730,7 +729,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with too short sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("79880"), Some("99901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -743,7 +742,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a missing sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(accountNumber = Some("99901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -755,7 +754,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a missing account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(sortCode = Some("679880")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -766,7 +765,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
     "should receive a bad request when calling the assess endpoint with a missing sort code and account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody =
-        BusinessRequest(Account(), Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(Account(), Some(Business(generateRandomBusinessName)))
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
 
@@ -777,7 +776,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too long sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("6679880"), Some("99901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -790,7 +789,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with an invalid sort code" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("9999A7"), Some("99901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -803,7 +802,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too long account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("679880"), Some("999901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -816,7 +815,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with a too short account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("679880"), Some("9901100")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -829,7 +828,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with an invalid account number" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("679880"), Some("1A110005")),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -855,7 +854,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with HMRC account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some(HMRC_ACCOUNT.sortCode.get), Some(HMRC_ACCOUNT.accountNumber.get)),
-        Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName))
       )
       val response    = service.postVerifyBusiness(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -867,7 +866,7 @@ class VerifyBusinessSpec extends BaseSpec with MockServer {
 
     "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    = service.postVerifyBusinessWithUnknownUserAgent(requestBody)
       val actual      = Json.parse(response.body).as[Forbidden]
 
