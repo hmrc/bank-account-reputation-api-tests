@@ -82,7 +82,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "@.auditType=='businessBankAccountCheck' " +
                 "&& @.detail.length()==6" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -150,7 +150,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "@.auditType=='businessBankAccountCheck' " +
                 "&& @.detail.length()==6" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==9" +
+                "&& @.detail.response.length()==8" +
                 ")]"
             )
           ),
@@ -248,7 +248,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_fromcache'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -452,7 +452,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -517,7 +517,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -571,7 +571,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 s"&& @.detail.callingClient=='$defaultUserAgent'" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -627,7 +627,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 s"&& @.detail.userAgent=='$defaultUserAgent'" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -680,7 +680,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
