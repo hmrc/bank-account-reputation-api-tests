@@ -32,9 +32,9 @@ import scala.util.Random
 
 class VerifyBusinessSpec extends BaseSpec with MockServer {
 
-  val DEFAULT_ACCOUNT: Account         = Account(Some("601613"), Some("26344696"))
-  val HMRC_ACCOUNT: Account            = Account(Some("083210"), Some("12001039"))
-  val SUREPAY_TEST_ACCOUNT: Account    = Account(Some("999999"), Some("00000001"))
+  val DEFAULT_ACCOUNT: Account      = Account(Some("601613"), Some("26344696"))
+  val HMRC_ACCOUNT: Account         = Account(Some("083210"), Some("12001039"))
+  val SUREPAY_TEST_ACCOUNT: Account = Account(Some("999999"), Some("00000001"))
 
   "Payload verification" when {
 

@@ -18,7 +18,17 @@ package uk.gov.hmrc.test.api.model.response
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AssessV4(accountNumberIsWellFormatted: String, accountExists: String, nameMatches: String, nonStandardAccountDetailsRequiredForBacs: String, sortCodeIsPresentOnEISCD: String, sortCodeSupportsDirectDebit: String, sortCodeSupportsDirectCredit: String, sortCodeBankName: Option[String] = None, accountName: Option[String] = None)
+case class AssessV4(
+  accountNumberIsWellFormatted: String,
+  accountExists: String,
+  nameMatches: String,
+  nonStandardAccountDetailsRequiredForBacs: String,
+  sortCodeIsPresentOnEISCD: String,
+  sortCodeSupportsDirectDebit: String,
+  sortCodeSupportsDirectCredit: String,
+  sortCodeBankName: Option[String] = None,
+  accountName: Option[String] = None
+)
 
 object AssessV4 {
   implicit val responseJsonFormat: OFormat[AssessV4] = Json.format[AssessV4]
