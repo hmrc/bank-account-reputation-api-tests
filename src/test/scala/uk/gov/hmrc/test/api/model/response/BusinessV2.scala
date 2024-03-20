@@ -25,7 +25,7 @@ case class BusinessV2(
   nonStandardAccountDetailsRequiredForBacs: String,
   accountExists: String,
   companyNameMatches: String,
-  companyPostCodeMatches: String,
+//  companyPostCodeMatches: String,
   companyRegistrationNumberMatches: String,
   sortCodeSupportsDirectDebit: String,
   sortCodeSupportsDirectCredit: String

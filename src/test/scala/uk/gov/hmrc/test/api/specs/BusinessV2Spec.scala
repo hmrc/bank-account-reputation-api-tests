@@ -21,7 +21,7 @@ import org.mockserver.verify.VerificationTimes
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.BusinessRequest
-import uk.gov.hmrc.test.api.model.request.components.{Account, Address, Business}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Business}
 import uk.gov.hmrc.test.api.model.response.{BadRequest, BusinessV2, Forbidden}
 import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
@@ -35,7 +35,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
   val HMRC_ACCOUNT: Account                               = Account(Some("083210"), Some("12001039"))
   val SUREPAY_TEST_ACCOUNT: Account                       = Account(Some("999999"), Some("00000001"))
   val DEFAULT_COMPANY_REGISTRATION_NUMBER: Option[String] = Some("UK27318156")
-  val DEFAULT_ADDRESS: Option[Address]                    = Some(Address(Some(Array("22303 Darwin Turnpike")), Some("CZ0 8IW")))
 
   "Payload verification" when {
 
@@ -59,7 +58,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -70,7 +69,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -84,7 +82,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "@.auditType=='businessBankAccountCheck' " +
                 "&& @.detail.length()==6" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -127,7 +125,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201948")),
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -137,7 +135,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       actual.sortCodeSupportsDirectDebit mustBe "no"
       actual.sortCodeSupportsDirectCredit mustBe "no"
@@ -153,7 +150,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "@.auditType=='businessBankAccountCheck' " +
                 "&& @.detail.length()==6" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==9" +
+                "&& @.detail.response.length()==8" +
                 ")]"
             )
           ),
@@ -214,7 +211,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -225,7 +222,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -238,7 +234,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -253,7 +248,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_fromcache'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -281,7 +276,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -292,7 +287,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "indeterminate"
       actual.companyNameMatches mustBe "indeterminate"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
     }
@@ -300,7 +294,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
     "should receive sort code is not valid if sort code is in modcheck database but account number fails validation" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201958")),
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -310,7 +304,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -335,7 +328,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("679880"), Some("27505196")),
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -346,7 +339,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
     }
@@ -355,7 +347,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       val xRequestId: String = UUID.randomUUID().toString
       val requestBody        = BusinessRequest(
         SUREPAY_TEST_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response           = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual             = Json.parse(response.body).as[BusinessV2]
@@ -365,7 +357,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -390,7 +381,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         Account(Some("401003"), Some("71201948")),
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -400,7 +391,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "inapplicable"
       actual.companyNameMatches mustBe "inapplicable"
-      actual.companyPostCodeMatches mustBe "inapplicable"
       actual.companyRegistrationNumberMatches mustBe "inapplicable"
       response.status mustBe 200
     }
@@ -425,7 +415,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -436,7 +426,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -449,7 +438,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -464,7 +452,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -492,7 +480,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -503,7 +491,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -516,7 +503,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       cached.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       cached.accountExists mustBe "yes"
       cached.companyNameMatches mustBe "yes"
-      cached.companyPostCodeMatches mustBe "indeterminate"
       cached.companyRegistrationNumberMatches mustBe "indeterminate"
       secondResponse.status mustBe 200
 
@@ -531,7 +517,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -559,7 +545,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -570,7 +556,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -586,7 +571,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 s"&& @.detail.callingClient=='$defaultUserAgent'" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -614,7 +599,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
 
       val response = service.postBusinessAssessV2WithTrueCallingClient(requestBody, xRequestId, "some-upstream-service")
@@ -626,7 +611,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "yes"
       actual.companyNameMatches mustBe "yes"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -643,7 +627,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 s"&& @.detail.userAgent=='$defaultUserAgent'" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -671,7 +655,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BusinessV2]
@@ -682,7 +666,6 @@ class BusinessV2Spec extends BaseSpec with MockServer {
       actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
       actual.accountExists mustBe "indeterminate"
       actual.companyNameMatches mustBe "indeterminate"
-      actual.companyPostCodeMatches mustBe "indeterminate"
       actual.companyRegistrationNumberMatches mustBe "indeterminate"
       response.status mustBe 200
 
@@ -697,7 +680,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
                 "&& @.detail.length()==6" +
                 "&& @.detail.context=='surepay_business_succeeded'" +
                 "&& @.detail.request.length()==2" +
-                "&& @.detail.response.length()==10" +
+                "&& @.detail.response.length()==9" +
                 ")]"
             )
           ),
@@ -707,7 +690,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
     "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody =
-        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName, address = DEFAULT_ADDRESS)))
+        BusinessRequest(DEFAULT_ACCOUNT, Some(Business(generateRandomBusinessName)))
       val response    = service.postBusinessAssessV2WithUnkownUserAgent(requestBody)
       val actual      = Json.parse(response.body).as[Forbidden]
 
@@ -722,7 +705,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
     "should receive a bad request when calling the assess endpoint with HMRC account details" taggedAs (LocalTests, ZapTests) in {
       val requestBody = BusinessRequest(
         Account(Some(HMRC_ACCOUNT.sortCode.get), Some(HMRC_ACCOUNT.accountNumber.get)),
-        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER, DEFAULT_ADDRESS))
+        Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody)
       val actual      = Json.parse(response.body).as[BadRequest]
@@ -752,7 +735,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       val requestBody = BusinessRequest(
         DEFAULT_ACCOUNT,
-        Some(Business(companyRegistrationNumber = DEFAULT_COMPANY_REGISTRATION_NUMBER, address = DEFAULT_ADDRESS))
+        Some(Business(companyRegistrationNumber = DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
       val actual      = Json.parse(response.body).as[BadRequest]

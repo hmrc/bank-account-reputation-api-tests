@@ -22,8 +22,4 @@ object Business {
   implicit val subjectJsonFormat: OFormat[Business] = Json.format[Business]
 }
 
-case class Business(
-  companyName: Option[String] = None,
-  companyRegistrationNumber: Option[String] = None,
-  address: Option[Address] = None
-)
+case class Business(companyName: Option[String] = None, companyRegistrationNumber: Option[String] = None)

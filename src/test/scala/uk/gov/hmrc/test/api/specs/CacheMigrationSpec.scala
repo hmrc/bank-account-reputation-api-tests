@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.test.api.specs
 
+import org.mockserver.model.{HttpRequest, HttpResponse}
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.PersonalRequest
-import uk.gov.hmrc.test.api.model.request.components.{Account, Address, Subject}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
 import uk.gov.hmrc.test.api.model.response.AssessV4
 import uk.gov.hmrc.test.api.tags.LocalTests
 import uk.gov.hmrc.test.api.utils.MockServer
@@ -28,22 +29,35 @@ import uk.gov.hmrc.test.api.utils.MockServer
 import java.util.UUID
 
 class CacheMigrationSpec extends BaseSpec with MockServer {
+  mockServer
+    .when(
+      HttpRequest
+        .request()
+        .withMethod("POST")
+        .withPath("/surepay/v1/gateway")
+    )
+    .respond(
+      HttpResponse
+        .response()
+        .withHeader("Content-Type", "application/json")
+        .withBody(s"""{"Matched" : true}""".stripMargin)
+        .withStatusCode(200)
+    )
 
   "Confirmation of Payee third party cache" must {
 
     "Handle a mix of legacy and new cache entries" taggedAs LocalTests in {
       val xRequestId: String = UUID.randomUUID().toString
-      val address            = Address(Some(Array("7 Skyline Avenue")), Some("X9 9AG"))
 
       service.postCacheMigrationtestSetup(xRequestId)
 
       val request1 = PersonalRequest(
         Account(Some("404784"), Some("70872490")),
-        Subject(name = Some("Bob Smith"), address = Some(address))
+        Subject(name = Some("Bob Smith"))
       )
       val request2 = PersonalRequest(
         Account(Some("404784"), Some("70872490")),
-        Subject(name = Some("Jan Smith"), address = Some(address))
+        Subject(name = Some("Jan Smith"))
       )
 
       val response1 = service.postVerifyPersonal(request1, xRequestId)

@@ -22,9 +22,4 @@ object Subject {
   implicit val subjectJsonFormat: OFormat[Subject] = Json.format[Subject]
 }
 
-case class Subject(
-  firstName: Option[String] = None,
-  lastName: Option[String] = None,
-  name: Option[String] = None,
-  address: Option[Address] = None
-)
+case class Subject(firstName: Option[String] = None, lastName: Option[String] = None, name: Option[String] = None)
