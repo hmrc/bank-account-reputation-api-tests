@@ -696,7 +696,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
 
       response.status mustBe 403
       actual.code mustBe 403
-      actual.description mustBe "'unknown' is not authorized to use BARS. Please complete 'https://forms.office.com/Pages/ResponsePage.aspx?id=PPdSrBr9mkqOekokjzE54cRTj_GCzpRJqsT4amG0JK1UMkpBS1NUVDhWR041NjJWU0lCMVZUNk5NTi4u' to request access."
+      actual.description mustBe "'unknown' is not authorized to use the requested BARS endpoint. Please complete 'https://forms.office.com/Pages/ResponsePage.aspx?id=PPdSrBr9mkqOekokjzE54cRTj_GCzpRJqsT4amG0JK1UMkpBS1NUVDhWR041NjJWU0lCMVZUNk5NTi4u' to request access."
     }
   }
 
@@ -738,6 +738,7 @@ class BusinessV2Spec extends BaseSpec with MockServer {
         Some(Business(companyRegistrationNumber = DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
       val response    = service.postBusinessAssessV2(requestBody, xRequestId)
+      println(s""">>> actual: ${response.body}""")
       val actual      = Json.parse(response.body).as[BadRequest]
 
       actual.code mustBe "MALFORMED_JSON"
