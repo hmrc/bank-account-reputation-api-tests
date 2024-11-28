@@ -282,13 +282,19 @@ class BankAccountReputationService extends HttpClient {
       10.seconds
     )
 
-  def postRefreshEiscdCache()    =
-    post(withHost(BarsEndpoints.REFRESH_EISCD_CACHE), "", HeaderNames.contentType -> applicationJson)
+  def postRefreshEiscdCache() =
+    Await.result(
+      post(withHost(BarsEndpoints.REFRESH_EISCD_CACHE), "", HeaderNames.contentType -> applicationJson),
+      60.seconds
+    )
 
   def postRefreshModcheckCache() =
-    post(withHost(BarsEndpoints.REFRESH_MODCHECK_CACHE), "", HeaderNames.contentType -> applicationJson)
+    Await.result(
+      post(withHost(BarsEndpoints.REFRESH_MODCHECK_CACHE), "", HeaderNames.contentType -> applicationJson),
+      60.seconds
+    )
 
-//
+  //
 //  def sendRequest(
 //    endpoint: String,
 //    payload: String,
