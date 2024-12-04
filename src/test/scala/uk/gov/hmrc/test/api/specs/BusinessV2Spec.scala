@@ -60,8 +60,9 @@ class BusinessV2Spec extends BaseSpec with MockServer {
         DEFAULT_ACCOUNT,
         Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))
       )
-      val response    = service.postBusinessAssessV2(requestBody, xRequestId)
-      val actual      = Json.parse(response.body).as[BusinessV2]
+
+      val response = service.postBusinessAssessV2(requestBody, xRequestId)
+      val actual   = Json.parse(response.body).as[BusinessV2]
 
       actual.accountNumberWithSortCodeIsValid mustBe "yes"
       actual.sortCodeIsPresentOnEISCD mustBe "yes"
