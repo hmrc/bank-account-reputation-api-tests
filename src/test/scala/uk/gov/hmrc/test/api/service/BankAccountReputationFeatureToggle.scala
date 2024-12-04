@@ -62,8 +62,8 @@ trait BankAccountReputationFeatureToggle extends HttpClient {
   def disableModulrPersonalCache(): Unit =
     postToFeatureToggle("microservice.services.modulr.personal.cache.enabled", isEnabled = false)
 
-  def enableSurePayResponses(): Unit               =
+  def enableSurePayResponses(): Unit =
     postToFeatureToggle("microservice.services.modulr.returnResults", isEnabled = false)
-  def enableModulrResponses(): Unit               =
+  def enableModulrResponses(): Unit  =
     postToFeatureToggle("microservice.services.modulr.returnResults")
 }

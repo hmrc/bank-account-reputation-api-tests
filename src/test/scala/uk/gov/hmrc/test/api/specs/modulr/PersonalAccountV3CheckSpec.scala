@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.test.api.specs.modulr
 
 import org.mockserver.model.HttpRequest.request
@@ -23,9 +39,10 @@ class PersonalAccountV3CheckSpec
     with BankAccountReputationFeatureToggle {
 
   override def beforeAll: Unit = {
-    enableModulr() // enables modulr API calls
+    disableSurePay() // disable surepay API call
+
+    enableModulr() // enables modulr API call
     enableModulrPersonalCache() // enables caching of modulr responses for personal bank account checks
-    enableModulrBusinessCache() // enables caching of modulr responses for business bank account checks
 
     enableModulrResponses() // returns modulr responses not surepay responses
 
@@ -176,7 +193,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "yes"
@@ -203,7 +220,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.nonStandardAccountDetailsRequiredForBacs mustBe "no"
@@ -236,7 +253,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "yes"
@@ -263,7 +280,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "no"
@@ -291,7 +308,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "yes"
@@ -319,7 +336,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "no"
@@ -347,7 +364,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "yes"
@@ -374,7 +391,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "no"
@@ -401,7 +418,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "indeterminate"
@@ -428,7 +445,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "indeterminate"
@@ -455,7 +472,7 @@ class PersonalAccountV3CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postPersonalAssessV3(requestBody, xRequestId)
+        val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
         responseBody.accountExists mustBe "no"

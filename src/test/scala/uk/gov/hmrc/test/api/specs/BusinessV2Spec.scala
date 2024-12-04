@@ -23,18 +23,31 @@ import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.BusinessRequest
 import uk.gov.hmrc.test.api.model.request.components.{Account, Business}
 import uk.gov.hmrc.test.api.model.response.{BadRequest, BusinessV2, Forbidden}
+import uk.gov.hmrc.test.api.service.BankAccountReputationFeatureToggle
 import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
 
 import java.util.UUID
 import scala.concurrent.duration.DurationInt
 
-class BusinessV2Spec extends BaseSpec with MockServer {
+class BusinessV2Spec extends BaseSpec with MockServer with BankAccountReputationFeatureToggle {
 
   val DEFAULT_ACCOUNT: Account                            = Account(Some("601613"), Some("26344696"))
   val HMRC_ACCOUNT: Account                               = Account(Some("083210"), Some("12001039"))
   val SUREPAY_TEST_ACCOUNT: Account                       = Account(Some("999999"), Some("00000001"))
   val DEFAULT_COMPANY_REGISTRATION_NUMBER: Option[String] = Some("UK27318156")
+
+  override def beforeAll: Unit = {
+    enableSurePay() // enables surepay API call
+    disableModulr() // disables modulr API call
+
+    enableSurePayBusinessCache()// enables caching of surepay responses for business bank account checks
+    enableSurePayPersonalCache()// enables caching of surepay responses for personal bank account checks
+
+    enableSurePayResponses() // returns surepay responses not modulr responses
+
+    super.beforeAll
+  }
 
   "Payload verification" when {
 

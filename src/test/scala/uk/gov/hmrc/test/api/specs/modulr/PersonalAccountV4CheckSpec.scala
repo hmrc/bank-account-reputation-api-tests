@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.test.api.specs.modulr
 
 import org.mockserver.model.HttpRequest.request
@@ -16,14 +32,16 @@ import uk.gov.hmrc.test.api.utils.MockServer
 import java.util.UUID
 
 class PersonalAccountV4CheckSpec
-  extends BaseSpec
+    extends BaseSpec
     with MockServer
     with AccountFixtures
     with ModulrFixtures
     with BankAccountReputationFeatureToggle {
 
   override def beforeAll: Unit = {
-    enableModulr() // enables modulr API calls
+    disableSurePay() // disable surepay API call
+
+    enableModulr() // enables modulr API call
     enableModulrPersonalCache() // enables caching of modulr responses for personal bank account checks
 
     enableModulrResponses() // returns modulr responses not surepay responses
@@ -144,7 +162,7 @@ class PersonalAccountV4CheckSpec
       val requestBody = PersonalRequest(Account(Some("401003"), Some("71201948")), Subject(name = generateRandomName))
 
       val response = service.postVerifyPersonal(requestBody, xRequestId)
-      val actual = Json.parse(response.body).as[AssessV4]
+      val actual   = Json.parse(response.body).as[AssessV4]
 
       actual.sortCodeIsPresentOnEISCD mustBe "no"
 
@@ -175,7 +193,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "yes"
@@ -202,7 +220,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.nonStandardAccountDetailsRequiredForBacs mustBe "no"
@@ -234,7 +252,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "yes"
@@ -261,7 +279,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "no"
@@ -288,7 +306,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "yes"
@@ -316,7 +334,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "no"
@@ -344,7 +362,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "yes"
@@ -372,7 +390,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "no"
@@ -399,7 +417,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "indeterminate"
@@ -426,7 +444,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "indeterminate"
@@ -453,7 +471,7 @@ class PersonalAccountV4CheckSpec
 
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(name = generateRandomName))
 
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
+        val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "no"
@@ -466,232 +484,232 @@ class PersonalAccountV4CheckSpec
 
     "return a BAD_REQUEST (400) response" when {
 
-      "the request has a missing name" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject())
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BAD_NAME"
         actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
         response.status mustBe 400
       }
 
-      "the request has both a name and last name" taggedAs(LocalTests, ZapTests) in {
+      "the request has both a name and last name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(lastName = Some("Smith"), name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BAD_NAME"
         actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
         response.status mustBe 400
       }
 
-      "the request has both a name and first name" taggedAs(LocalTests, ZapTests) in {
+      "the request has both a name and first name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some("Nathan"), name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BAD_NAME"
         actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
         response.status mustBe 400
       }
 
-      "the request has an empty first name" taggedAs(LocalTests, ZapTests) in {
+      "the request has an empty first name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some(""), lastName = Some("Smith"))
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BLANK_FIRST_NAME"
         actual.desc mustBe "firstName length is blank"
         response.status mustBe 400
       }
 
-      "the request has a missing first name" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing first name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(lastName = Some("Smith")))
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BAD_NAME"
         actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
         response.status mustBe 400
       }
 
-      "the request has an empty last name" taggedAs(LocalTests, ZapTests) in {
+      "the request has an empty last name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some("Nathan"), lastName = Some(""))
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BLANK_LAST_NAME"
         actual.desc mustBe "lastName length is blank"
         response.status mustBe 400
       }
 
-      "the request has a missing last name" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing last name" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(firstName = Some("Nathan")))
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "BAD_NAME"
         actual.desc mustBe "Either the name or the firstName/lastName pair is required (but not both)"
         response.status mustBe 400
       }
 
-      "the request has a too short sort code" taggedAs(LocalTests, ZapTests) in {
+      "the request has a too short sort code" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("79880"), Some("99901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_SORTCODE"
         actual.desc mustBe "79880: invalid sortcode"
         response.status mustBe 400
       }
 
-      "the request has a missing sort code" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing sort code" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(accountNumber = Some("99901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "MALFORMED_JSON"
         response.status mustBe 400
       }
 
-      "the request has a missing account number" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing account number" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(sortCode = Some("679880")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "MALFORMED_JSON"
         response.status mustBe 400
       }
 
-      "the request has a missing sort code and account number" taggedAs(LocalTests, ZapTests) in {
+      "the request has a missing sort code and account number" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(Account(), Subject(name = generateRandomName))
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "MALFORMED_JSON"
         response.status mustBe 400
       }
 
-      "the request has a too long sort code" taggedAs(LocalTests, ZapTests) in {
+      "the request has a too long sort code" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("6679880"), Some("99901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_SORTCODE"
         actual.desc mustBe "6679880: invalid sortcode"
         response.status mustBe 400
       }
 
-      "the request has an invalid sort code" taggedAs(LocalTests, ZapTests) in {
+      "the request has an invalid sort code" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("9999A7"), Some("99901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_SORTCODE"
         actual.desc mustBe "9999A7: invalid sortcode"
         response.status mustBe 400
       }
 
-      "the request has a too long account number" taggedAs(LocalTests, ZapTests) in {
+      "the request has a too long account number" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("999901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_ACCOUNT_NUMBER"
         actual.desc mustBe "999901100: invalid account number"
         response.status mustBe 400
       }
 
-      "the request has a too short account number" taggedAs(LocalTests, ZapTests) in {
+      "the request has a too short account number" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("9901100")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_ACCOUNT_NUMBER"
         actual.desc mustBe "9901100: invalid account number"
         response.status mustBe 400
       }
 
-      "the request has an invalid account number" taggedAs(LocalTests, ZapTests) in {
+      "the request has an invalid account number" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("1A110005")),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "INVALID_ACCOUNT_NUMBER"
         actual.desc mustBe "1A110005: invalid account number"
         response.status mustBe 400
       }
 
-      "the request has an invalid json body" taggedAs(LocalTests, ZapTests) in {
+      "the request has an invalid json body" taggedAs (LocalTests, ZapTests) in {
         val requestBody =
           """{
             |"account":
             |{"sortCode" :
             |""".stripMargin
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "MALFORMED_JSON"
         response.status mustBe 400
       }
 
-      "the request has  HMRC account details" taggedAs(LocalTests, ZapTests) in {
+      "the request has  HMRC account details" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some(HMRC_ACCOUNT.sortCode.get), Some(HMRC_ACCOUNT.accountNumber.get)),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonal(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[BadRequest]
+        val response    = service.postVerifyPersonal(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[BadRequest]
 
         actual.code mustBe "SORT_CODE_ON_DENY_LIST"
         actual.desc mustBe s"${HMRC_ACCOUNT.sortCode.get}: sort code is on deny list. This usually means that it is an HMRC sort code."
         response.status mustBe 400
       }
 
-      "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs(LocalTests, ZapTests) in {
+      "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
         val requestBody = PersonalRequest(
           Account(Some(DEFAULT_ACCOUNT.sortCode.get), Some(DEFAULT_ACCOUNT.accountNumber.get)),
           Subject(name = generateRandomName)
         )
-        val response = service.postVerifyPersonalWithUnknownUserAgent(requestBody, xRequestId)
-        val actual = Json.parse(response.body).as[Forbidden]
+        val response    = service.postVerifyPersonalWithUnknownUserAgent(requestBody, xRequestId)
+        val actual      = Json.parse(response.body).as[Forbidden]
 
         response.status mustBe 403
         actual.code mustBe 403

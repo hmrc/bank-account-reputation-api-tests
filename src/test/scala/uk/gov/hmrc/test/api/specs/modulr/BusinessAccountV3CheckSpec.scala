@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package uk.gov.hmrc.test.api.specs.modulr
 
 import org.mockserver.model.HttpRequest.request
@@ -23,6 +39,8 @@ class BusinessAccountV3CheckSpec
     with BankAccountReputationFeatureToggle {
 
   override def beforeAll: Unit = {
+    disableSurePay() // disable surepay API call
+
     enableModulr() // enables modulr API call
     enableModulrBusinessCache() // enables caching of modulr responses for business bank account checks
 
@@ -226,7 +244,7 @@ class BusinessAccountV3CheckSpec
         responseBody.nonStandardAccountDetailsRequiredForBacs mustBe "no"
         responseBody.sortCodeBankName.get mustBe "Lloyds"
         responseBody.accountExists mustBe "yes"
-        responseBody.nameMatches mustBe "yes"
+        responseBody.nameMatches mustBe "partial"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
 
         response.status mustBe 200
@@ -347,7 +365,7 @@ class BusinessAccountV3CheckSpec
         val responseBody = Json.parse(response.body).as[BusinessV3]
 
         responseBody.accountExists mustBe "no"
-        responseBody.nameMatches mustBe "yes"
+        responseBody.nameMatches mustBe "partial"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
       }
@@ -377,7 +395,7 @@ class BusinessAccountV3CheckSpec
         val responseBody = Json.parse(response.body).as[BusinessV3]
 
         responseBody.accountExists mustBe "yes"
-        responseBody.nameMatches mustBe "yes"
+        responseBody.nameMatches mustBe "partial"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
       }
