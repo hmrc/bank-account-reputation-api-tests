@@ -32,6 +32,7 @@ trait BaseSpec extends AnyWordSpec with BeforeAndAfterEach with Matchers with Be
   val service        = new BankAccountReputationService
 
   val SUREPAY_PATH     = "/surepay/v1/gateway"
+  val MODULR_PATH      = "/api-sandbox/account-name-check"
   val defaultUserAgent = "bars-acceptance-tests"
 
   private val random     = new java.util.Random()

@@ -20,6 +20,9 @@ import org.mockserver.client.MockServerClient
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.RequestDefinition
 import org.mockserver.verify.VerificationTimes
+import org.scalatest.concurrent.Eventually.eventually
+import org.scalatest.concurrent.Futures.timeout
+import org.scalatest.time.{Milliseconds, Span}
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -29,9 +32,7 @@ package object specs {
       duration: FiniteDuration = 500.millis
     )(requestDefinition: RequestDefinition, times: VerificationTimes): MockServerClient =
       delayedFunction(duration)(clientServer.verify(requestDefinition, times))
-    private def delayedFunction[T](duration: FiniteDuration)(f: => T): T = {
-      Thread.sleep(duration.toMillis)
-      f
-    }
+    private def delayedFunction[T](duration: FiniteDuration)(f: => T): T                =
+      eventually(timeout(Span(duration.toMillis, Milliseconds)))(f)
   }
 }

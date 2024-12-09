@@ -1,4 +1,4 @@
-#!/bin/bash -e
+  #!/bin/bash -e
 ENV=${1:-local}
 
 # Scalafmt checks have been separated from the test command to avoid OutOfMemoryError in Jenkins

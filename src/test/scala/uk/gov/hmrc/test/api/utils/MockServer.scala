@@ -17,8 +17,11 @@
 package uk.gov.hmrc.test.api.utils
 
 import com.typesafe.config.Config
+import org.mockserver.client.MockServerClient
 import org.mockserver.integration.ClientAndServer
-import org.mockserver.model.{HttpRequest, HttpResponse}
+import org.mockserver.model.HttpRequest.request
+import org.mockserver.model.{HttpRequest, HttpResponse, JsonPathBody}
+import org.mockserver.verify.VerificationTimes
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
 import uk.gov.hmrc.test.api.client.HttpClient
 
@@ -91,4 +94,36 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
 
   def deleteAuthSessions() =
     Await.result(delete(s"http://localhost:8585/sessions"), 10.seconds)
+
+  def verifyTxSucceededAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient = {
+    mockServer.verify(
+      request()
+        .withPath("/write/audit")
+        .withBody(
+          JsonPathBody.jsonPath(
+            "$[?(" +
+              "@.auditType=='TxSucceeded' " +
+              s"&& @.detail[\"response.callcredit\"]=='$callCredit' " +
+              "&& @.detail.callingClient=='bars-acceptance-tests'" +
+              ")]"
+          )
+        ), VerificationTimes.exactly(numberOfTimes)
+    )
+  }
+
+  def verifyBusinessBankAccountCheckAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient = {
+    mockServer.verify(
+      request()
+        .withPath("/write/audit")
+        .withBody(
+          JsonPathBody.jsonPath(
+            "$[?(" +
+              "@.auditType=='businessBankAccountCheck' " +
+              s"&& @.detail[\"context\"]=='$callCredit' " +
+              "&& @.detail.callingClient=='bars-acceptance-tests'" +
+              ")]"
+          )
+        ), VerificationTimes.exactly(numberOfTimes)
+    )
+  }
 }
