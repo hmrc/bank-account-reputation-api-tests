@@ -173,7 +173,7 @@ class PersonalAccountV4CheckSpec
       verifyTxSucceededAuditEvent("notfoundineiscd", numberOfTimes = 1)
     }
 
-    "return a OK (200) response with the expected assessment results" when {
+    "return a CREATED (201) response with the expected assessment results" when {
 
       "the Modulr API responds with MATCHED" in {
         mockServer
@@ -283,7 +283,7 @@ class PersonalAccountV4CheckSpec
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "no"
-        responseBody.nameMatches mustBe "partial"
+        responseBody.nameMatches mustBe "yes"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
       }
@@ -339,7 +339,7 @@ class PersonalAccountV4CheckSpec
 
         responseBody.accountExists mustBe "no"
         responseBody.nameMatches mustBe "partial"
-        responseBody.accountName.getOrElse("") mustBe "Patrick O'Conner-Smith"
+        responseBody.accountName mustBe None
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
       }
@@ -366,7 +366,7 @@ class PersonalAccountV4CheckSpec
         val responseBody = Json.parse(response.body).as[AssessV4]
 
         responseBody.accountExists mustBe "yes"
-        responseBody.nameMatches mustBe "yes"
+        responseBody.nameMatches mustBe "partial"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         responseBody.accountName.getOrElse("") mustBe "Patrick O'Conner-Smith"
         response.status mustBe 200
@@ -420,7 +420,7 @@ class PersonalAccountV4CheckSpec
         val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
-        responseBody.accountExists mustBe "indeterminate"
+        responseBody.accountExists mustBe "no"
         responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
@@ -447,7 +447,7 @@ class PersonalAccountV4CheckSpec
         val response     = service.postVerifyPersonal(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV4]
 
-        responseBody.accountExists mustBe "indeterminate"
+        responseBody.accountExists mustBe "yes"
         responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
