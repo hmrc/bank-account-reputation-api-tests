@@ -173,7 +173,7 @@ class PersonalAccountV3CheckSpec
       verifyTxSucceededAuditEvent("notfoundineiscd", numberOfTimes = 1)
     }
 
-    "return a OK (200) response with the expected assessment results" when {
+    "return a CREATED (201) response with the expected assessment results" when {
 
       "the Modulr API responds with MATCHED" in {
         mockServer
@@ -421,7 +421,7 @@ class PersonalAccountV3CheckSpec
         val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
-        responseBody.accountExists mustBe "indeterminate"
+        responseBody.accountExists mustBe "no"
         responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
@@ -448,7 +448,7 @@ class PersonalAccountV3CheckSpec
         val response     = service.postPersonalAssessV3(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[AssessV3]
 
-        responseBody.accountExists mustBe "indeterminate"
+        responseBody.accountExists mustBe "yes"
         responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
