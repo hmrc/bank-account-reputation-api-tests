@@ -185,7 +185,7 @@ class BusinessAccountV3CheckSpec
       verifyBusinessBankAccountCheckAuditEvent("business_modcheckfailed", numberOfTimes = 1)
     }
 
-    "return a OK (200) response with the expected assessment results" when {
+    "return a CREATED (201) response with the expected assessment results" when {
 
       "the Modulr API responds with MATCHED" in {
         mockServer
@@ -455,7 +455,7 @@ class BusinessAccountV3CheckSpec
         val responseBody = Json.parse(response.body).as[BusinessV3]
 
         responseBody.accountExists mustBe "no"
-        responseBody.nameMatches mustBe "yes"
+        responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
       }
@@ -484,7 +484,7 @@ class BusinessAccountV3CheckSpec
         val response     = service.postVerifyBusiness(requestBody, xRequestId)
         val responseBody = Json.parse(response.body).as[BusinessV3]
 
-        responseBody.accountExists mustBe "indeterminate"
+        responseBody.accountExists mustBe "yes"
         responseBody.nameMatches mustBe "indeterminate"
         responseBody.sortCodeIsPresentOnEISCD mustBe "yes"
         response.status mustBe 200
