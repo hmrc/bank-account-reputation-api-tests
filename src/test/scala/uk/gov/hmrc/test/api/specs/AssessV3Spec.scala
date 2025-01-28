@@ -17,20 +17,19 @@
 package uk.gov.hmrc.test.api.specs
 
 import org.mockserver.model.NottableString.string
+import org.mockserver.model._
+import org.mockserver.verify.VerificationTimes
 import play.api.libs.json.Json
 import uk.gov.hmrc.api.BaseSpec
-import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
-import uk.gov.hmrc.test.api.utils.MockServer
-import org.mockserver.model.{Header, HttpRequest, HttpResponse, JsonPathBody, NottableString}
-import org.mockserver.verify.VerificationTimes
 import uk.gov.hmrc.test.api.model.request.PersonalRequest
-import uk.gov.hmrc.test.api.model.response.{AssessV3, BadRequest, CallValidateResponseBuilder, Forbidden}
+import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
+import uk.gov.hmrc.test.api.model.response.{AssessV3, BadRequest, Forbidden}
 import uk.gov.hmrc.test.api.service.BankAccountReputationFeatureToggle
 import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
+import uk.gov.hmrc.test.api.utils.MockServer
 
 import java.util.UUID
 import scala.concurrent.duration.DurationInt
-import scala.util.Random
 
 class AssessV3Spec extends BaseSpec with MockServer with BankAccountReputationFeatureToggle {
 
@@ -42,8 +41,8 @@ class AssessV3Spec extends BaseSpec with MockServer with BankAccountReputationFe
     enableSurePay() // enables surepay API call
     disableModulr() // disables modulr API call
 
-    enableSurePayBusinessCache()// enables caching of surepay responses for business bank account checks
-    enableSurePayPersonalCache()// enables caching of surepay responses for personal bank account checks
+    enableSurePayBusinessCache() // enables caching of surepay responses for business bank account checks
+    enableSurePayPersonalCache() // enables caching of surepay responses for personal bank account checks
 
     enableSurePayResponses() // returns surepay responses not modulr responses
 

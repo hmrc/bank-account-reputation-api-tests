@@ -41,8 +41,8 @@ class BusinessV2Spec extends BaseSpec with MockServer with BankAccountReputation
     enableSurePay() // enables surepay API call
     disableModulr() // disables modulr API call
 
-    enableSurePayBusinessCache()// enables caching of surepay responses for business bank account checks
-    enableSurePayPersonalCache()// enables caching of surepay responses for personal bank account checks
+    enableSurePayBusinessCache() // enables caching of surepay responses for business bank account checks
+    enableSurePayPersonalCache() // enables caching of surepay responses for personal bank account checks
 
     enableSurePayResponses() // returns surepay responses not modulr responses
 
