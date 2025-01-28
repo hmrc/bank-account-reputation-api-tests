@@ -119,7 +119,7 @@ class BusinessAccountV2CheckSpec
             JsonPathBody.jsonPath(
               "$[?(" +
                 "@.auditType=='OutboundCall' " +
-                "&& @.request.tags.path=='http://localhost:6001/api-sandbox/account-name-check'" +
+                "&& @.request.tags.path=='http://localhost:6001/api-sandbox-token/account-name-check'" +
                 s"&& @.request.tags.X-Request-ID=='$xRequestId'" +
                 ")]"
             )
