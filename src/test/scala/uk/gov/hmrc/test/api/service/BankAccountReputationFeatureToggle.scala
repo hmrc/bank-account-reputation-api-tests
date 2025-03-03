@@ -36,23 +36,6 @@ trait BankAccountReputationFeatureToggle extends HttpClient {
       10.seconds
     )
 
-  def enableSurePay(): Unit               =
-    postToFeatureToggle("microservice.services.surepay.enabled")
-  def disableSurePay(): Unit              =
-    postToFeatureToggle("microservice.services.surepay.enabled", isEnabled = false)
-  def enableSurePayBusinessCache(): Unit  =
-    postToFeatureToggle("microservice.services.surepay.business.cache.enabled")
-  def disableSurePayBusinessCache(): Unit =
-    postToFeatureToggle("microservice.services.surepay.business.cache.enabled", isEnabled = false)
-  def enableSurePayPersonalCache(): Unit  =
-    postToFeatureToggle("microservice.services.surepay.personal.cache.enabled")
-  def disableSurePayPersonalCache(): Unit =
-    postToFeatureToggle("microservice.services.surepay.personal.cache.enabled", isEnabled = false)
-
-  def enableModulr(): Unit               =
-    postToFeatureToggle("microservice.services.modulr.enabled")
-  def disableModulr(): Unit              =
-    postToFeatureToggle("microservice.services.modulr.enabled", isEnabled = false)
   def enableModulrBusinessCache(): Unit  =
     postToFeatureToggle("microservice.services.modulr.business.cache.enabled")
   def disableModulrBusinessCache(): Unit =
@@ -61,9 +44,4 @@ trait BankAccountReputationFeatureToggle extends HttpClient {
     postToFeatureToggle("microservice.services.modulr.personal.cache.enabled")
   def disableModulrPersonalCache(): Unit =
     postToFeatureToggle("microservice.services.modulr.personal.cache.enabled", isEnabled = false)
-
-  def enableSurePayResponses(): Unit =
-    postToFeatureToggle("microservice.services.modulr.returnResults", isEnabled = false)
-  def enableModulrResponses(): Unit  =
-    postToFeatureToggle("microservice.services.modulr.returnResults")
 }

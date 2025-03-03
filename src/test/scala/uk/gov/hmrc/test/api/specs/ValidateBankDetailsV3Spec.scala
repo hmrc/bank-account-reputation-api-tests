@@ -35,7 +35,6 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
   val NO_DR_ACCOUNT: Account        = Account(Some("203007"), Some("44355655"))
   val NO_AU_ACCOUNT: Account        = Account(Some("235262"), Some("98675767"))
   val DEFAULT_ACCOUNT: Account      = Account(Some("404784"), Some("70872490"))
-  val SUREPAY_TEST_ACCOUNT: Account = Account(Some("999999"), Some("00000001"))
 
   "Should receive a valid response when using valid sort code and account number" taggedAs (LocalTests, ZapTests) in {
     val requestBody = BankAccountRequest(Account(Some("110010"), Some("29250496")))
@@ -92,17 +91,6 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
         ),
       VerificationTimes.atLeast(1)
     )
-  }
-
-  "should not accept Surepay test credentials with default config" taggedAs (LocalTests, ZapTests) in {
-    val requestBody = BankAccountRequest(SUREPAY_TEST_ACCOUNT)
-    val response    = service.postValidateBankDetailsV3(requestBody)
-    val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
-
-    actual.accountNumberIsWellFormatted mustBe "indeterminate"
-    actual.nonStandardAccountDetailsRequiredForBacs mustBe "no"
-    actual.sortCodeIsPresentOnEISCD mustBe "no"
-    response.status mustBe 200
   }
 
   "should receive accountNumberIsWellFormatted no if sort code is valid but account number fails mod check" taggedAs (LocalTests, ZapTests) in {
