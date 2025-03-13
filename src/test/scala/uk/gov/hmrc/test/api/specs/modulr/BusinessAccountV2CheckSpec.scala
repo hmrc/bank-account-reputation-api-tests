@@ -39,12 +39,7 @@ class BusinessAccountV2CheckSpec
     with BankAccountReputationFeatureToggle {
 
   override def beforeAll: Unit = {
-    disableSurePay() // disable surepay API call
-
-    enableModulr() // enables modulr API call
     enableModulrBusinessCache() // enables caching of modulr responses for business bank account checks
-
-    enableModulrResponses() // returns modulr responses not surepay responses
 
     super.beforeAll
   }

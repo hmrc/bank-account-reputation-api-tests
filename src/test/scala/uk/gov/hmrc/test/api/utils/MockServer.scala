@@ -64,22 +64,6 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
           .response()
           .withStatusCode(200)
       )
-    mockServer
-      .when(
-        HttpRequest
-          .request()
-          .withMethod("POST")
-          .withPath("/surepay/oauth/client_credential/accesstoken")
-      )
-      .respond(
-        HttpResponse
-          .response()
-          .withHeader("Content-Type", "application/json")
-          .withBody(s"""{"access_token" : "${UUID
-            .randomUUID()
-            .toString}", "expires_in" : "3599", "token_type" : "BearerToken" }""".stripMargin)
-          .withStatusCode(200)
-      )
   }
 
   override def afterEach(): Unit = {

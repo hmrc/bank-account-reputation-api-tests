@@ -39,12 +39,7 @@ class PersonalAccountV4CheckSpec
     with BankAccountReputationFeatureToggle {
 
   override def beforeAll: Unit = {
-    disableSurePay() // disable surepay API call
-
-    enableModulr() // enables modulr API call
     enableModulrPersonalCache() // enables caching of modulr responses for personal bank account checks
-
-    enableModulrResponses() // returns modulr responses not surepay responses
 
     super.beforeAll
   }
