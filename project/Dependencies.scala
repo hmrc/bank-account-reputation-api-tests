@@ -13,6 +13,8 @@ object Dependencies {
     "io.findify"          %% "s3mock"                   % "0.2.6"  % Test,
     "org.mock-server"      % "mockserver-netty"         % "5.12.0" % Test,
     "io.swagger.parser.v3" % "swagger-parser"           % "2.1.18" % Test,
-    "org.openapi4j"        % "openapi-schema-validator" % "1.0.7"  % Test
+    "org.openapi4j"        % "openapi-schema-validator" % "1.0.7"  % Test,
+    "org.bouncycastle"     % "bcprov-jdk15on"           % "1.70"   % Test,
+    "org.bouncycastle"     % "bcpkix-jdk15on"           % "1.70"   % Test,
   )
 }
