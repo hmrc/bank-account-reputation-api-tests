@@ -26,12 +26,10 @@ import org.openapi4j.schema.validator.ValidationData
 import org.openapi4j.schema.validator.v3.SchemaValidator
 import org.scalatest.AppendedClues.convertToClueful
 import org.scalatest.matchers.should.Matchers._
-import org.scalatest.time.SpanSugar.convertIntToGrainOfTime
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.service.BankAccountReputationService
 
-import scala.concurrent.Await
 import scala.jdk.StreamConverters._
 
 class SwaggerSpecs extends AnyWordSpec with SwaggerSpec {
