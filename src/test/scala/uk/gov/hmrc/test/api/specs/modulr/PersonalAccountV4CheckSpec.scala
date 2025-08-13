@@ -26,7 +26,6 @@ import uk.gov.hmrc.test.api.model.request.PersonalRequest
 import uk.gov.hmrc.test.api.model.request.components.{Account, Subject}
 import uk.gov.hmrc.test.api.model.response.{AssessV4, BadRequest, Forbidden}
 import uk.gov.hmrc.test.api.service.BankAccountReputationFeatureToggle
-import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
 
 import java.util.UUID
@@ -479,7 +478,7 @@ class PersonalAccountV4CheckSpec
 
     "return a BAD_REQUEST (400) response" when {
 
-      "the request has a missing name" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing name" in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject())
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
@@ -489,7 +488,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has both a name and last name" taggedAs (LocalTests, ZapTests) in {
+      "the request has both a name and last name" in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(lastName = Some("Smith"), name = generateRandomName)
@@ -502,7 +501,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has both a name and first name" taggedAs (LocalTests, ZapTests) in {
+      "the request has both a name and first name" in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some("Nathan"), name = generateRandomName)
@@ -515,7 +514,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has an empty first name" taggedAs (LocalTests, ZapTests) in {
+      "the request has an empty first name" in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some(""), lastName = Some("Smith"))
@@ -528,7 +527,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a missing first name" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing first name" in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(lastName = Some("Smith")))
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
@@ -538,7 +537,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has an empty last name" taggedAs (LocalTests, ZapTests) in {
+      "the request has an empty last name" in {
         val requestBody = PersonalRequest(
           DEFAULT_ACCOUNT,
           Subject(firstName = Some("Nathan"), lastName = Some(""))
@@ -551,7 +550,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a missing last name" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing last name" in {
         val requestBody = PersonalRequest(DEFAULT_ACCOUNT, Subject(firstName = Some("Nathan")))
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
@@ -561,7 +560,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a too short sort code" taggedAs (LocalTests, ZapTests) in {
+      "the request has a too short sort code" in {
         val requestBody = PersonalRequest(
           Account(Some("79880"), Some("99901100")),
           Subject(name = generateRandomName)
@@ -574,7 +573,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a missing sort code" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing sort code" in {
         val requestBody = PersonalRequest(
           Account(accountNumber = Some("99901100")),
           Subject(name = generateRandomName)
@@ -586,7 +585,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a missing account number" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing account number" in {
         val requestBody = PersonalRequest(
           Account(sortCode = Some("679880")),
           Subject(name = generateRandomName)
@@ -598,7 +597,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a missing sort code and account number" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing sort code and account number" in {
         val requestBody = PersonalRequest(Account(), Subject(name = generateRandomName))
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
@@ -607,7 +606,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a too long sort code" taggedAs (LocalTests, ZapTests) in {
+      "the request has a too long sort code" in {
         val requestBody = PersonalRequest(
           Account(Some("6679880"), Some("99901100")),
           Subject(name = generateRandomName)
@@ -620,7 +619,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has an invalid sort code" taggedAs (LocalTests, ZapTests) in {
+      "the request has an invalid sort code" in {
         val requestBody = PersonalRequest(
           Account(Some("9999A7"), Some("99901100")),
           Subject(name = generateRandomName)
@@ -633,7 +632,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a too long account number" taggedAs (LocalTests, ZapTests) in {
+      "the request has a too long account number" in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("999901100")),
           Subject(name = generateRandomName)
@@ -646,7 +645,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has a too short account number" taggedAs (LocalTests, ZapTests) in {
+      "the request has a too short account number" in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("9901100")),
           Subject(name = generateRandomName)
@@ -659,7 +658,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has an invalid account number" taggedAs (LocalTests, ZapTests) in {
+      "the request has an invalid account number" in {
         val requestBody = PersonalRequest(
           Account(Some("679880"), Some("1A110005")),
           Subject(name = generateRandomName)
@@ -672,7 +671,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has an invalid json body" taggedAs (LocalTests, ZapTests) in {
+      "the request has an invalid json body" in {
         val requestBody = "{}"
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
@@ -681,7 +680,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "the request has  HMRC account details" taggedAs (LocalTests, ZapTests) in {
+      "the request has  HMRC account details" in {
         val requestBody = PersonalRequest(
           Account(Some(HMRC_ACCOUNT.sortCode.get), Some(HMRC_ACCOUNT.accountNumber.get)),
           Subject(name = generateRandomName)
@@ -694,7 +693,7 @@ class PersonalAccountV4CheckSpec
         response.status mustBe 400
       }
 
-      "should receive a forbidden request when calling the assess endpoint with default account details" taggedAs (LocalTests, ZapTests) in {
+      "should receive a forbidden request when calling the assess endpoint with default account details" in {
         val requestBody = PersonalRequest(
           Account(Some(DEFAULT_ACCOUNT.sortCode.get), Some(DEFAULT_ACCOUNT.accountNumber.get)),
           Subject(name = generateRandomName)
