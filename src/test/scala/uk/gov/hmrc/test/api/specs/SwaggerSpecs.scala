@@ -136,14 +136,13 @@ trait SwaggerSpec {
             }
 
             examples.foreach { e =>
-              val headers = Seq("Content-Type" -> applicationJson, "User-Agent" -> userAgent)
-              val req     = verb match {
+              val headers  = Seq("Content-Type" -> applicationJson, "User-Agent" -> userAgent)
+              val response = verb match {
                 case "GET"  => client.get(s"$host$path", headers: _*)
                 case "POST" =>
-                  client.post(s"$host$path", mapper.writeValueAsString(e.asInstanceOf[JsonNode]), headers: _*)
+                  client.post(s"$host$path", mapper.writeValueAsString(e.asInstanceOf[JsonNode]), headers: _*)()
               }
 
-              val response = Await.result(req, 10.seconds)
               responses.get(response.status.toString).map {
                 case Some(r) =>
                   s"$verb $path - ${response.status}" in {

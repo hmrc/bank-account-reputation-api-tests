@@ -16,25 +16,22 @@
 
 package uk.gov.hmrc.test.api.service
 
-import uk.gov.hmrc.test.api.client.HttpClient
+import uk.gov.hmrc.test.api.client.HttpClientHelper
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 
 import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
-trait BankAccountReputationFeatureToggle extends HttpClient {
+trait BankAccountReputationFeatureToggle extends HttpClientHelper {
 
   lazy val featureToggleHost: String = TestConfiguration.url("bank-account-reputation")
 
   private def postToFeatureToggle(configName: String, isEnabled: Boolean = true): Unit =
-    Await.result(
-      post(
-        s"$featureToggleHost/bank-account-reputation/test-only/api/feature-switches",
-        s"""[{"configName": "$configName", "displayName": "", "isEnabled": $isEnabled}]""",
-        "Content-Type" -> "application/json"
-      ),
-      10.seconds
-    )
+    post(
+      s"$featureToggleHost/bank-account-reputation/test-only/api/feature-switches",
+      s"""[{"configName": "$configName", "displayName": "", "isEnabled": $isEnabled}]""",
+      "Content-Type" -> "application/json"
+    )()
 
   def enableModulrBusinessCache(): Unit  =
     postToFeatureToggle("microservice.services.modulr.business.cache.enabled")

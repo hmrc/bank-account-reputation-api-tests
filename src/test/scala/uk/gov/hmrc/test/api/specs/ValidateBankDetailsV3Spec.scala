@@ -30,11 +30,11 @@ import scala.concurrent.duration.DurationInt
 
 class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
 
-  val HMRC_ACCOUNT: Account         = Account(Some("083210"), Some("12001039"))
-  val NO_CR_ACCOUNT: Account        = Account(Some("209057"), Some("44355655"))
-  val NO_DR_ACCOUNT: Account        = Account(Some("203007"), Some("44355655"))
-  val NO_AU_ACCOUNT: Account        = Account(Some("235262"), Some("98675767"))
-  val DEFAULT_ACCOUNT: Account      = Account(Some("404784"), Some("70872490"))
+  val HMRC_ACCOUNT: Account    = Account(Some("083210"), Some("12001039"))
+  val NO_CR_ACCOUNT: Account   = Account(Some("209057"), Some("44355655"))
+  val NO_DR_ACCOUNT: Account   = Account(Some("203007"), Some("44355655"))
+  val NO_AU_ACCOUNT: Account   = Account(Some("235262"), Some("98675767"))
+  val DEFAULT_ACCOUNT: Account = Account(Some("404784"), Some("70872490"))
 
   "Should receive a valid response when using valid sort code and account number" taggedAs (LocalTests, ZapTests) in {
     val requestBody = BankAccountRequest(Account(Some("110010"), Some("29250496")))

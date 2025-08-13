@@ -38,10 +38,10 @@ class PersonalAccountV3CheckSpec
     with ModulrFixtures
     with BankAccountReputationFeatureToggle {
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     enableModulrPersonalCache() // enables caching of modulr responses for personal bank account checks
 
-    super.beforeAll
+    super.beforeAll()
   }
 
   "/personal/v3/assess" should {
@@ -674,11 +674,7 @@ class PersonalAccountV3CheckSpec
       }
 
       "the request has an invalid json body" taggedAs (LocalTests, ZapTests) in {
-        val requestBody =
-          """{
-            |"account":
-            |{"sortCode" :
-            |""".stripMargin
+        val requestBody = "{}"
         val response    = service.postPersonalAssessV3(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
 

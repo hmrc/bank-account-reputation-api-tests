@@ -38,10 +38,10 @@ class PersonalAccountV4CheckSpec
     with ModulrFixtures
     with BankAccountReputationFeatureToggle {
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     enableModulrPersonalCache() // enables caching of modulr responses for personal bank account checks
 
-    super.beforeAll
+    super.beforeAll()
   }
 
   "/verify/personal" should {
@@ -673,11 +673,7 @@ class PersonalAccountV4CheckSpec
       }
 
       "the request has an invalid json body" taggedAs (LocalTests, ZapTests) in {
-        val requestBody =
-          """{
-            |"account":
-            |{"sortCode" :
-            |""".stripMargin
+        val requestBody = "{}"
         val response    = service.postVerifyPersonal(requestBody, xRequestId)
         val actual      = Json.parse(response.body).as[BadRequest]
 

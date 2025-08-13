@@ -2,19 +2,14 @@ import sbt.*
 
 object Dependencies {
 
-  val test = Seq(
-    "org.scalatest"       %% "scalatest"                % "3.2.15" % Test,
-    "com.vladsch.flexmark" % "flexmark-all"             % "0.62.2" % Test,
-    "com.typesafe"         % "config"                   % "1.3.2"  % Test,
-    "com.typesafe.play"   %% "play-ahc-ws-standalone"   % "2.1.10" % Test,
-    "org.slf4j"            % "slf4j-api"                % "2.0.16" % Test,
-    "ch.qos.logback"       % "logback-classic"          % "1.5.12" % Test,
-    "com.typesafe.play"   %% "play-ws-standalone-json"  % "2.1.10" % Test,
-    "io.findify"          %% "s3mock"                   % "0.2.6"  % Test,
-    "org.mock-server"      % "mockserver-netty"         % "5.12.0" % Test,
-    "io.swagger.parser.v3" % "swagger-parser"           % "2.1.18" % Test,
-    "org.openapi4j"        % "openapi-schema-validator" % "1.0.7"  % Test,
-    "org.bouncycastle"     % "bcprov-jdk15on"           % "1.70"   % Test,
-    "org.bouncycastle"     % "bcpkix-jdk15on"           % "1.70"   % Test,
-  )
+  val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"             %% "api-test-runner"          % "0.10.0",
+    "org.slf4j"               % "slf4j-api"                 % "2.0.17",
+    "software.amazon.awssdk"  % "s3"                        % "2.32.10",
+    "org.mock-server"         % "mockserver-netty"          % "5.12.0",
+    "io.swagger.parser.v3"    % "swagger-parser"            % "2.1.18",
+    "org.openapi4j"           % "openapi-schema-validator"  % "1.0.7",
+    "org.bouncycastle"        % "bcprov-jdk18on"            % "1.81",
+    "org.bouncycastle"        % "bcpkix-jdk18on"            % "1.81"
+  ).map(_ % Test)
 }

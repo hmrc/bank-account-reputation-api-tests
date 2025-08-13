@@ -38,10 +38,10 @@ class BusinessAccountV2CheckSpec
     with ModulrFixtures
     with BankAccountReputationFeatureToggle {
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     enableModulrBusinessCache() // enables caching of modulr responses for business bank account checks
 
-    super.beforeAll
+    super.beforeAll()
   }
 
   "/business/v2/assess" should {
