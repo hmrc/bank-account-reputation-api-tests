@@ -26,7 +26,6 @@ import uk.gov.hmrc.test.api.model.request.BusinessRequest
 import uk.gov.hmrc.test.api.model.request.components.{Account, Business}
 import uk.gov.hmrc.test.api.model.response.{BadRequest, BusinessV3, Forbidden}
 import uk.gov.hmrc.test.api.service.BankAccountReputationFeatureToggle
-import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
 
 import java.util.UUID
@@ -38,10 +37,10 @@ class BusinessAccountV3CheckSpec
     with ModulrFixtures
     with BankAccountReputationFeatureToggle {
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     enableModulrBusinessCache() // enables caching of modulr responses for business bank account checks
 
-    super.beforeAll
+    super.beforeAll()
   }
 
   "/verify/business" should {
@@ -519,7 +518,7 @@ class BusinessAccountV3CheckSpec
 
     "return a BAD_REQUEST (400) response" when {
 
-      "the request has a missing company name" taggedAs (LocalTests, ZapTests) in {
+      "the request has a missing company name" in {
         val requestBody = BusinessRequest(
           DEFAULT_ACCOUNT,
           Some(Business(companyName = Some(""), DEFAULT_COMPANY_REGISTRATION_NUMBER))
@@ -532,7 +531,7 @@ class BusinessAccountV3CheckSpec
         response.status mustBe 400
       }
 
-      "should receive a forbidden request when calling the assess endpoint with an unknown user agent" taggedAs (LocalTests, ZapTests) in {
+      "should receive a forbidden request when calling the assess endpoint with an unknown user agent" in {
         val requestBody = BusinessRequest(
           DEFAULT_ACCOUNT,
           Some(Business(generateRandomBusinessName, DEFAULT_COMPANY_REGISTRATION_NUMBER))

@@ -16,26 +16,22 @@
 
 package uk.gov.hmrc.test.api.utils
 
-import com.typesafe.config.Config
 import org.mockserver.client.MockServerClient
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.{HttpRequest, HttpResponse, JsonPathBody}
 import org.mockserver.verify.VerificationTimes
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
-import uk.gov.hmrc.test.api.client.HttpClient
+import uk.gov.hmrc.test.api.client.HttpClientHelper
+import uk.gov.hmrc.test.api.conf.TestConfiguration
 
-import java.util.UUID
-import scala.concurrent.Await
-import scala.concurrent.duration.DurationInt
+trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClientHelper {
+  this: Suite =>
 
-trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClient {
-  this: Suite with ({ def config: Config }) =>
-
-  private val mockServerPort           = config.getInt("mock.server.port")
+  private lazy val mockServerPort      = TestConfiguration.config.getInt("mock.server.port")
   lazy val mockServer: ClientAndServer = ClientAndServer.startClientAndServer(mockServerPort)
 
-  override def beforeAll: Unit =
+  override def beforeAll(): Unit =
     super.beforeAll()
 
   override def beforeEach(): Unit = {
@@ -71,13 +67,13 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
     deleteAuthSessions()
   }
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     mockServer.stop()
     super.afterAll()
   }
 
   def deleteAuthSessions() =
-    Await.result(delete(s"http://localhost:8585/sessions"), 10.seconds)
+    delete(s"http://localhost:8585/sessions")
 
   def verifyTxSucceededAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient = {
     mockServer.verify(

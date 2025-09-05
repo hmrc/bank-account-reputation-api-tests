@@ -16,38 +16,24 @@
 
 package uk.gov.hmrc.api
 
-import com.typesafe.config.{Config, ConfigFactory}
-
-import io.findify.s3mock.S3Mock
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import uk.gov.hmrc.test.api.service.BankAccountReputationService
+import uk.gov.hmrc.test.api.utils.S3Helper
 
-import java.io.File
+trait BaseSpec extends AnyWordSpec with BeforeAndAfterEach with Matchers with BeforeAndAfterAll with S3Helper {
 
-trait BaseSpec extends AnyWordSpec with BeforeAndAfterEach with Matchers with BeforeAndAfterAll {
+  val service     = new BankAccountReputationService
+  val MODULR_PATH = "/api-sandbox-token/account-name-check"
 
-  val config: Config = ConfigFactory.load()
-  val service        = new BankAccountReputationService
-
-  val MODULR_PATH      = "/api-sandbox-token/account-name-check"
-  val defaultUserAgent = "bars-acceptance-tests"
-
-  private val random     = new java.util.Random()
-  private val s3MockPort = config.getInt("mock.s3.port")
-
-  val s3Dir          = new File(getClass.getResource("/sThreeBucket").getFile())
-  private val s3Mock = S3Mock(port = s3MockPort, dir = s3Dir.getAbsolutePath)
+  private val random = new java.util.Random()
 
   override def beforeAll(): Unit = {
-    s3Mock.start
+    uploadFilesToS3()
     service.postRefreshEiscdCache()
     service.postRefreshModcheckCache()
   }
-
-  override def afterAll(): Unit =
-    s3Mock.shutdown
 
   def randomAlphaChar(): Char = {
     val low  = 97

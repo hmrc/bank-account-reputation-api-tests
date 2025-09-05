@@ -23,20 +23,19 @@ import uk.gov.hmrc.api.BaseSpec
 import uk.gov.hmrc.test.api.model.request.BankAccountRequest
 import uk.gov.hmrc.test.api.model.request.components.Account
 import uk.gov.hmrc.test.api.model.response.{BadRequest, Forbidden, ValidateBankDetailsV3}
-import uk.gov.hmrc.test.api.tags.{LocalTests, ZapTests}
 import uk.gov.hmrc.test.api.utils.MockServer
 
 import scala.concurrent.duration.DurationInt
 
 class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
 
-  val HMRC_ACCOUNT: Account         = Account(Some("083210"), Some("12001039"))
-  val NO_CR_ACCOUNT: Account        = Account(Some("209057"), Some("44355655"))
-  val NO_DR_ACCOUNT: Account        = Account(Some("203007"), Some("44355655"))
-  val NO_AU_ACCOUNT: Account        = Account(Some("235262"), Some("98675767"))
-  val DEFAULT_ACCOUNT: Account      = Account(Some("404784"), Some("70872490"))
+  val HMRC_ACCOUNT: Account    = Account(Some("083210"), Some("12001039"))
+  val NO_CR_ACCOUNT: Account   = Account(Some("209057"), Some("44355655"))
+  val NO_DR_ACCOUNT: Account   = Account(Some("203007"), Some("44355655"))
+  val NO_AU_ACCOUNT: Account   = Account(Some("235262"), Some("98675767"))
+  val DEFAULT_ACCOUNT: Account = Account(Some("404784"), Some("70872490"))
 
-  "Should receive a valid response when using valid sort code and account number" taggedAs (LocalTests, ZapTests) in {
+  "Should receive a valid response when using valid sort code and account number" in {
     val requestBody = BankAccountRequest(Account(Some("110010"), Some("29250496")))
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -67,7 +66,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "Should receive indeterminate if sort code fails mod check " taggedAs (LocalTests, ZapTests) in {
+  "Should receive indeterminate if sort code fails mod check " in {
     val requestBody = BankAccountRequest(Account(Some("000000"), Some("29250496")))
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -93,7 +92,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "should receive accountNumberIsWellFormatted no if sort code is valid but account number fails mod check" taggedAs (LocalTests, ZapTests) in {
+  "should receive accountNumberIsWellFormatted no if sort code is valid but account number fails mod check" in {
     val requestBody = BankAccountRequest(Account(Some("110010"), Some("29250490")))
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -122,7 +121,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "should receive a bad request when calling the validate endpoint with HMRC account details" taggedAs (LocalTests, ZapTests) in {
+  "should receive a bad request when calling the validate endpoint with HMRC account details" in {
     val requestBody = BankAccountRequest(HMRC_ACCOUNT)
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[BadRequest]
@@ -132,7 +131,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     response.status mustBe 400
   }
 
-  "Should return direct credit not supported if disallowed transactions contains CR" taggedAs (LocalTests, ZapTests) in {
+  "Should return direct credit not supported if disallowed transactions contains CR" in {
     val requestBody = BankAccountRequest(NO_CR_ACCOUNT)
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -161,7 +160,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "Should return direct debit not supported if disallowed transactions contains AU" taggedAs (LocalTests, ZapTests) in {
+  "Should return direct debit not supported if disallowed transactions contains AU" in {
     val requestBody = BankAccountRequest(NO_AU_ACCOUNT)
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -190,7 +189,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "Should return direct debit not supported if disallowed transactions contains DR" taggedAs (LocalTests, ZapTests) in {
+  "Should return direct debit not supported if disallowed transactions contains DR" in {
     val requestBody = BankAccountRequest(NO_DR_ACCOUNT)
     val response    = service.postValidateBankDetailsV3(requestBody)
     val actual      = Json.parse(response.body).as[ValidateBankDetailsV3]
@@ -219,7 +218,7 @@ class ValidateBankDetailsV3Spec extends BaseSpec with MockServer {
     )
   }
 
-  "should receive a forbidden request when calling the validate endpoint with HMRC account details" taggedAs (LocalTests, ZapTests) in {
+  "should receive a forbidden request when calling the validate endpoint with HMRC account details" in {
     val requestBody = BankAccountRequest(Account(Some("110010"), Some("29250496")))
     val response    = service.postValidateBankDetailsV3WithUnkownUserAgent(requestBody)
     val actual      = Json.parse(response.body).as[Forbidden]
