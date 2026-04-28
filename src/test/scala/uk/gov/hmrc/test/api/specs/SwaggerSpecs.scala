@@ -43,22 +43,22 @@ class SwaggerSpecs extends AnyWordSpec with SwaggerSpec {
 trait SwaggerSpec {
   this: AnyWordSpec =>
 
-  val parseOptions = new ParseOptions()
+  val parseOptions: ParseOptions = new ParseOptions()
   parseOptions.setResolve(true)
   parseOptions.setResolveFully(true)
 
-  val mapper = new ObjectMapper()
-  mapper.setSerializationInclusion(Include.NON_NULL);
+  val mapper: ObjectMapper = new ObjectMapper()
+  mapper.setSerializationInclusion(Include.NON_NULL)
 
-  val applicationJson = "application/json"
-  val client          = new BankAccountReputationService()
+  val applicationJson: String = "application/json"
+  val client: BankAccountReputationService = new BankAccountReputationService()
 
   def validOpenApiSpecAt(
     host: String,
     openApiUrl: String,
     excludePaths: Seq[String] = Seq(),
     userAgent: String = "bars-acceptance-tests"
-  ) {
+  ): Unit = {
 
     "should parse" in {
       val result = new OpenAPIV3Parser().readLocation(s"$host$openApiUrl", null, parseOptions)
@@ -177,7 +177,7 @@ trait SwaggerSpec {
       }
       .toScala(Map)
 
-  def getExamples(request: MediaType) = {
+  def getExamples(request: MediaType): Seq[Any] = {
     val requestExample  = Option(request.getExample)
     val requestExamples =
       Option(request.getExamples).map(_.values().stream().toScala(Seq)).getOrElse(Seq()).map(_.getValue)

@@ -17,6 +17,7 @@
 package uk.gov.hmrc.test.api.service
 
 import com.typesafe.config.{Config, ConfigFactory}
+import play.api.libs.ws.StandaloneWSResponse
 import uk.gov.hmrc.test.api.client.HttpClientHelper
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.model.request.{BankAccountRequest, BusinessRequest, PersonalRequest}
@@ -27,7 +28,7 @@ import scala.concurrent.duration.DurationInt
 class BankAccountReputationService extends HttpClientHelper {
 
   val config: Config   = ConfigFactory.load()
-  val defaultUserAgent = "bars-acceptance-tests"
+  val defaultUserAgent: String = "bars-acceptance-tests"
   val host: String     = TestConfiguration.url("bank-account-reputation")
 
   object BarsEndpoints {
@@ -44,7 +45,7 @@ class BankAccountReputationService extends HttpClientHelper {
     val CACHE_MIGRATION_TEST_SETUP = "test-only/cache-migration-test/setup"
   }
 
-  def withHost(endpoint: String) = s"$host/$endpoint"
+  def withHost(endpoint: String): String = s"$host/$endpoint"
 
   object HeaderNames {
     val xRequestId        = "X-Request-ID"
@@ -53,9 +54,9 @@ class BankAccountReputationService extends HttpClientHelper {
     val contentType       = "Content-Type"
   }
 
-  val applicationJson = "application/json"
+  val applicationJson: String = "application/json"
 
-  def postPersonalAssessV3(requestBody: PersonalRequest, xRequestId: String) =
+  def postPersonalAssessV3(requestBody: PersonalRequest, xRequestId: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.PERSONAL_ASSESS_V3),
       requestBody.asJsonString(),
@@ -64,7 +65,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postPersonalAssessV3(requestBody: String, xRequestId: String) =
+  def postPersonalAssessV3(requestBody: String, xRequestId: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.PERSONAL_ASSESS_V3),
       requestBody,
@@ -74,10 +75,10 @@ class BankAccountReputationService extends HttpClientHelper {
     )()
 
   def postPersonalAssessV3WithTrueCallingClient(
-                                                 requestBody: PersonalRequest,
-                                                 xRequestId: String,
-                                                 trueCallingClient: String
-                                               ) =
+    requestBody: PersonalRequest,
+    xRequestId: String,
+    trueCallingClient: String
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.PERSONAL_ASSESS_V3),
       requestBody.asJsonString(),
@@ -87,7 +88,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.trueCallingClient -> trueCallingClient
     )()
 
-  def postPersonalAssessV3WithUnkownUserAgent(requestBody: PersonalRequest, xRequestId: String) =
+  def postPersonalAssessV3WithUnkownUserAgent(requestBody: PersonalRequest, xRequestId: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.PERSONAL_ASSESS_V3),
       requestBody.asJsonString(),
@@ -96,7 +97,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postBusinessAssessV2(requestBody: BusinessRequest, xRequestId: String = "") =
+  def postBusinessAssessV2(requestBody: BusinessRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.BUSINESS_ASSESS_V2),
       requestBody.asJsonString(),
@@ -106,10 +107,10 @@ class BankAccountReputationService extends HttpClientHelper {
     )()
 
   def postBusinessAssessV2WithTrueCallingClient(
-                                                 requestBody: BusinessRequest,
-                                                 xRequestId: String,
-                                                 trueCallingClient: String
-                                               ) =
+    requestBody: BusinessRequest,
+    xRequestId: String,
+    trueCallingClient: String
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.BUSINESS_ASSESS_V2),
       requestBody.asJsonString(),
@@ -119,7 +120,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.trueCallingClient -> trueCallingClient
     )()
 
-  def postBusinessAssessV2WithUnkownUserAgent(requestBody: BusinessRequest, xRequestId: String = "") =
+  def postBusinessAssessV2WithUnkownUserAgent(requestBody: BusinessRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.BUSINESS_ASSESS_V2),
       requestBody.asJsonString(),
@@ -128,7 +129,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postValidateBankDetailsV3(requestBody: BankAccountRequest, xRequestId: String = "") =
+  def postValidateBankDetailsV3(requestBody: BankAccountRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VALIDATE_BANK_DETAILS_V3),
       requestBody.asJsonString(),
@@ -137,7 +138,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postValidateBankDetailsV3WithUnkownUserAgent(requestBody: BankAccountRequest, xRequestId: String = "") =
+  def postValidateBankDetailsV3WithUnkownUserAgent(requestBody: BankAccountRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VALIDATE_BANK_DETAILS_V3),
       requestBody.asJsonString(),
@@ -146,7 +147,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postVerifyPersonal(request: PersonalRequest, xRequestId: String = "") =
+  def postVerifyPersonal(request: PersonalRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_PERSONAL),
       request.asJsonString(),
@@ -155,7 +156,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyPersonal(request: String, xRequestId: String) =
+  def postVerifyPersonal(request: String, xRequestId: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_PERSONAL),
       request,
@@ -164,7 +165,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyPersonalWithTrueCallingClient(request: PersonalRequest, xRequestId: String, trueCallingClient: String) =
+  def postVerifyPersonalWithTrueCallingClient(request: PersonalRequest, xRequestId: String, trueCallingClient: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_PERSONAL),
       request.asJsonString(),
@@ -174,7 +175,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.trueCallingClient -> trueCallingClient
     )()
 
-  def postVerifyPersonalWithUnknownUserAgent(request: PersonalRequest, xRequestId: String = "") =
+  def postVerifyPersonalWithUnknownUserAgent(request: PersonalRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_PERSONAL),
       request.asJsonString(),
@@ -183,7 +184,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postVerifyBusiness(request: BusinessRequest, xRequestId: String = "") =
+  def postVerifyBusiness(request: BusinessRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_BUSINESS),
       request.asJsonString(),
@@ -192,7 +193,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyBusiness(request: String, xRequestId: String) =
+  def postVerifyBusiness(request: String, xRequestId: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_BUSINESS),
       request,
@@ -201,7 +202,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyBusinessWithTrueCallingClient(request: BusinessRequest, xRequestId: String, trueCallingClient: String) =
+  def postVerifyBusinessWithTrueCallingClient(request: BusinessRequest, xRequestId: String, trueCallingClient: String): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_BUSINESS),
       request.asJsonString(),
@@ -211,7 +212,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.trueCallingClient -> trueCallingClient
     )()
 
-  def postVerifyBusinessWithUnknownUserAgent(request: BusinessRequest, xRequestId: String = "") =
+  def postVerifyBusinessWithUnknownUserAgent(request: BusinessRequest, xRequestId: String = ""): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_BUSINESS),
       request.asJsonString(),
@@ -220,10 +221,10 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postRefreshEiscdCache() =
+  def postRefreshEiscdCache(): StandaloneWSResponse =
     post(withHost(BarsEndpoints.REFRESH_EISCD_CACHE), "{}", HeaderNames.contentType -> applicationJson)(60.seconds)
 
-  def postRefreshModcheckCache() =
+  def postRefreshModcheckCache(): StandaloneWSResponse =
     post(withHost(BarsEndpoints.REFRESH_MODCHECK_CACHE), "{}", HeaderNames.contentType -> applicationJson)(60.seconds)
 
 }
