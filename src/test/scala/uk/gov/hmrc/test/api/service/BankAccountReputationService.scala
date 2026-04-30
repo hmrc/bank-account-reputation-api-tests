@@ -22,14 +22,13 @@ import uk.gov.hmrc.test.api.client.HttpClientHelper
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.model.request.{BankAccountRequest, BusinessRequest, PersonalRequest}
 
-import scala.concurrent.Await
 import scala.concurrent.duration.DurationInt
 
 class BankAccountReputationService extends HttpClientHelper {
 
-  val config: Config   = ConfigFactory.load()
+  val config: Config           = ConfigFactory.load()
   val defaultUserAgent: String = "bars-acceptance-tests"
-  val host: String     = TestConfiguration.url("bank-account-reputation")
+  val host: String             = TestConfiguration.url("bank-account-reputation")
 
   object BarsEndpoints {
     val PERSONAL_ASSESS_V1         = "assess"
@@ -120,7 +119,10 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.trueCallingClient -> trueCallingClient
     )()
 
-  def postBusinessAssessV2WithUnkownUserAgent(requestBody: BusinessRequest, xRequestId: String = ""): StandaloneWSResponse =
+  def postBusinessAssessV2WithUnkownUserAgent(
+    requestBody: BusinessRequest,
+    xRequestId: String = ""
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.BUSINESS_ASSESS_V2),
       requestBody.asJsonString(),
@@ -138,7 +140,10 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postValidateBankDetailsV3WithUnkownUserAgent(requestBody: BankAccountRequest, xRequestId: String = ""): StandaloneWSResponse =
+  def postValidateBankDetailsV3WithUnkownUserAgent(
+    requestBody: BankAccountRequest,
+    xRequestId: String = ""
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VALIDATE_BANK_DETAILS_V3),
       requestBody.asJsonString(),
@@ -165,7 +170,11 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyPersonalWithTrueCallingClient(request: PersonalRequest, xRequestId: String, trueCallingClient: String): StandaloneWSResponse =
+  def postVerifyPersonalWithTrueCallingClient(
+    request: PersonalRequest,
+    xRequestId: String,
+    trueCallingClient: String
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_PERSONAL),
       request.asJsonString(),
@@ -202,7 +211,11 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> defaultUserAgent
     )()
 
-  def postVerifyBusinessWithTrueCallingClient(request: BusinessRequest, xRequestId: String, trueCallingClient: String): StandaloneWSResponse =
+  def postVerifyBusinessWithTrueCallingClient(
+    request: BusinessRequest,
+    xRequestId: String,
+    trueCallingClient: String
+  ): StandaloneWSResponse =
     post(
       withHost(BarsEndpoints.VERIFY_BUSINESS),
       request.asJsonString(),
@@ -221,7 +234,7 @@ class BankAccountReputationService extends HttpClientHelper {
       HeaderNames.userAgent   -> "unknown"
     )()
 
-  def postRefreshEiscdCache(): StandaloneWSResponse =
+  def postRefreshEiscdCache(): StandaloneWSResponse    =
     post(withHost(BarsEndpoints.REFRESH_EISCD_CACHE), "{}", HeaderNames.contentType -> applicationJson)(60.seconds)
 
   def postRefreshModcheckCache(): StandaloneWSResponse =

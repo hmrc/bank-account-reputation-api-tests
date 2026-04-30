@@ -50,7 +50,7 @@ trait SwaggerSpec {
   val mapper: ObjectMapper = new ObjectMapper()
   mapper.setSerializationInclusion(Include.NON_NULL)
 
-  val applicationJson: String = "application/json"
+  val applicationJson: String              = "application/json"
   val client: BankAccountReputationService = new BankAccountReputationService()
 
   def validOpenApiSpecAt(
@@ -178,11 +178,22 @@ trait SwaggerSpec {
       .toScala(Map)
 
   def getExamples(request: MediaType): Seq[Any] = {
-    val requestExample  = Option(request.getExample)
-    val requestExamples =
-      Option(request.getExamples).map(_.values().stream().toScala(Seq)).getOrElse(Seq()).map(_.getValue)
-    val schemaExample   = Option(request.getSchema.getExample)
-    val schemaExamples  = Option(request.getSchema.getExamples).map(_.stream().toScala(Seq)).getOrElse(Seq())
+    val requestExample: Seq[Any] =
+      Option(request.getExample).toSeq
+
+    val requestExamples: Seq[Any] =
+      Option(request.getExamples)
+        .map(_.values().stream().toScala(Seq).map(_.getValue))
+        .getOrElse(Seq.empty[Any])
+
+    val schemaExample: Seq[Any] =
+      Option(request.getSchema).flatMap(s => Option(s.getExample)).toSeq
+
+    val schemaExamples: Seq[Any] =
+      Option(request.getSchema)
+        .flatMap(s => Option(s.getExamples))
+        .map(_.stream().toScala(Seq))
+        .getOrElse(Seq.empty[Any])
 
     requestExample ++ requestExamples ++ schemaExample ++ schemaExamples
   }
