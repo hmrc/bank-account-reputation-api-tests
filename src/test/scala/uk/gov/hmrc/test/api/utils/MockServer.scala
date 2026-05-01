@@ -22,6 +22,7 @@ import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.{HttpRequest, HttpResponse, JsonPathBody}
 import org.mockserver.verify.VerificationTimes
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import play.api.libs.ws.StandaloneWSResponse
 import uk.gov.hmrc.test.api.client.HttpClientHelper
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 
@@ -72,10 +73,10 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
     super.afterAll()
   }
 
-  def deleteAuthSessions() =
+  def deleteAuthSessions(): StandaloneWSResponse =
     delete(s"http://localhost:8585/sessions")
 
-  def verifyTxSucceededAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient = {
+  def verifyTxSucceededAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient =
     mockServer.verify(
       request()
         .withPath("/write/audit")
@@ -83,15 +84,15 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
           JsonPathBody.jsonPath(
             "$[?(" +
               "@.auditType=='TxSucceeded' " +
-              s"&& @.detail[\"response.callcredit\"]=='$callCredit' " +
+              s"""&& @.detail["response.callcredit"]=='$callCredit' """ +
               "&& @.detail.callingClient=='bars-acceptance-tests'" +
               ")]"
           )
-        ), VerificationTimes.exactly(numberOfTimes)
+        ),
+      VerificationTimes.exactly(numberOfTimes)
     )
-  }
 
-  def verifyBusinessBankAccountCheckAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient = {
+  def verifyBusinessBankAccountCheckAuditEvent(callCredit: String, numberOfTimes: Int): MockServerClient =
     mockServer.verify(
       request()
         .withPath("/write/audit")
@@ -99,11 +100,11 @@ trait MockServer extends BeforeAndAfterEach with BeforeAndAfterAll with HttpClie
           JsonPathBody.jsonPath(
             "$[?(" +
               "@.auditType=='businessBankAccountCheck' " +
-              s"&& @.detail[\"context\"]=='$callCredit' " +
+              s"""&& @.detail["context"]=='$callCredit' """ +
               "&& @.detail.callingClient=='bars-acceptance-tests'" +
               ")]"
           )
-        ), VerificationTimes.exactly(numberOfTimes)
+        ),
+      VerificationTimes.exactly(numberOfTimes)
     )
-  }
 }

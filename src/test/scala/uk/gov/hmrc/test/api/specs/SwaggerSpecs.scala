@@ -43,22 +43,22 @@ class SwaggerSpecs extends AnyWordSpec with SwaggerSpec {
 trait SwaggerSpec {
   this: AnyWordSpec =>
 
-  val parseOptions = new ParseOptions()
+  val parseOptions: ParseOptions = new ParseOptions()
   parseOptions.setResolve(true)
   parseOptions.setResolveFully(true)
 
-  val mapper = new ObjectMapper()
-  mapper.setSerializationInclusion(Include.NON_NULL);
+  val mapper: ObjectMapper = new ObjectMapper()
+  mapper.setSerializationInclusion(Include.NON_NULL)
 
-  val applicationJson = "application/json"
-  val client          = new BankAccountReputationService()
+  val applicationJson: String              = "application/json"
+  val client: BankAccountReputationService = new BankAccountReputationService()
 
   def validOpenApiSpecAt(
     host: String,
     openApiUrl: String,
     excludePaths: Seq[String] = Seq(),
     userAgent: String = "bars-acceptance-tests"
-  ) {
+  ): Unit = {
 
     "should parse" in {
       val result = new OpenAPIV3Parser().readLocation(s"$host$openApiUrl", null, parseOptions)
@@ -177,12 +177,23 @@ trait SwaggerSpec {
       }
       .toScala(Map)
 
-  def getExamples(request: MediaType) = {
-    val requestExample  = Option(request.getExample)
-    val requestExamples =
-      Option(request.getExamples).map(_.values().stream().toScala(Seq)).getOrElse(Seq()).map(_.getValue)
-    val schemaExample   = Option(request.getSchema.getExample)
-    val schemaExamples  = Option(request.getSchema.getExamples).map(_.stream().toScala(Seq)).getOrElse(Seq())
+  def getExamples(request: MediaType): Seq[Any] = {
+    val requestExample: Seq[Any] =
+      Option(request.getExample).toSeq
+
+    val requestExamples: Seq[Any] =
+      Option(request.getExamples)
+        .map(_.values().stream().toScala(Seq).map(_.getValue))
+        .getOrElse(Seq.empty[Any])
+
+    val schemaExample: Seq[Any] =
+      Option(request.getSchema).flatMap(s => Option(s.getExample)).toSeq
+
+    val schemaExamples: Seq[Any] =
+      Option(request.getSchema)
+        .flatMap(s => Option(s.getExamples))
+        .map(_.stream().toScala(Seq))
+        .getOrElse(Seq.empty[Any])
 
     requestExample ++ requestExamples ++ schemaExample ++ schemaExamples
   }

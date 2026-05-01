@@ -29,7 +29,7 @@ import java.io.File
 import java.net.URI
 import scala.util.{Failure, Success, Try}
 
-trait S3Helper extends BeforeAndAfterAll { _: TestSuite =>
+trait S3Helper extends BeforeAndAfterAll { self: TestSuite =>
 
   lazy val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
